@@ -1,0 +1,29 @@
+{% extends 'shared/_layout.html' %}
+
+{% load django_tables2 %}
+
+
+{% block title %}
+    بارندگی اخیر در استان
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h3 class="text-center">بارندگی اخیر در استان</h3>
+
+        <p class="lead text-center">
+            این جدول نشان دهنده میزان بارندگی اخیر در استان است. داده ها از پایگاه داده بارانسنج ها گرفته شده اند.
+        </p>
+
+        {% render_table table %}
+
+    </div>
+    {% if request.user.is_authenticated %}
+        <div class="download-buttons">
+            <a href="{% url 'rain_gauges_export_xls' %}" class="btn btn-down">دانلود در فرمت اکسل</a>
+            <button class="btn btn-down" onclick="printTable()">پرینت جدول</button>
+        </div>
+    {% endif %}
+{% endblock %}
+
+

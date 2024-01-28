@@ -1,0 +1,98 @@
+{% extends 'shared/_layout.html' %}
+{% load thumbnail %}
+{% load render_partial %}
+
+{% block title %}لیست ایستگاهها{% endblock %}
+
+{% block content %}
+    <section>
+        <div class="container">
+            <div class="row">
+
+                <div class="col-sm-9 padding-right">
+                    {% if stations %}
+                        <div class="features_items"><!--features_items-->
+                            <h2 class="title text-center">ایستگاهها</h2>
+                            {% for station in stations %}
+                                {% include 'includes/station_item_partial.html' with station=station col_size=4 %}
+                            {% endfor %}
+                            <div class="clearfix"></div>
+                            <ul class="pagination">
+                                {% if page_obj.has_previous %}
+                                    <li>
+                                        <a class="cursor-pointer"
+                                           onclick="fillPage({{ page_obj.previous_page_number }})">قبلی</a>
+                                    </li>
+                                {% endif %}
+                                {% for pageNumber in paginator.page_range %}
+                                    <li class={% if page_obj.number == pageNumber %}"active"{% endif %}>
+                                        <a class="cursor-pointer text-center"
+                                           onclick="fillPage({{ pageNumber }})">{{ pageNumber }}</a>
+                                    </li>
+                                {% endfor %}
+                                {% if page_obj.has_next %}
+                                    <li>
+                                        <a class="cursor-pointer" onclick="fillPage({{ page_obj.next_page_number }})">بعدی</a>
+                                    </li>
+                                {% endif %}
+
+                            </ul>
+                        </div><!--features_items-->
+                    {% else %}
+                        <div class="alert alert-warning">
+                            <p>هیچ محصولی یافت نشد</p>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="col-sm-3">
+                    <div class="left-sidebar">
+                        {% render_partial 'station_module.views.station_categories_component' %}
+                        {% render_partial 'station_module.views.station_types_component' %}
+
+
+{% comment %}
+                        <div class="code-range"><!--code-range-->
+                            <h2>فیلتـر قیمـت</h2>
+                            <div class="well">
+                                <input
+                                        type="text"
+                                        class="span2"
+                                        value="{{ start_code }},{{ end_code }}"
+                                        data-slider-min="0"
+                                        data-slider-max="{{ db_max_code }}"
+                                        data-slider-step="1000"
+                                        data-slider-value="[{{ start_code }},{{ end_code }}]"
+                                        id="sl2">
+                                <br/>
+                                <b>{{ db_max_code }}</b> <b class="pull-left">0</b>
+                            </div>
+                        </div><!--/code-range-->
+{% endcomment %}
+
+                        <div>
+                            <form action="" method="get" id="filter_form">
+                                <input type="hidden" name="page" id="page" value="{{ page_obj.number }}">
+                                <input type="hidden" name="start_code" id="start_code" value="{{ start_code }}">
+                                <input type="hidden" name="end_code" id="end_code" value="{{ end_code }}">
+                            </form>
+{#                            <button class="btn btn-success btn-block" onclick="filterstations">فیلتر</button>#}
+                        </div>
+
+                        <div class="shipping text-center"><!--shipping-->
+                            {% for banner in banners %}
+                                <a href="{{ banner.url }}">
+                                    <h5>{{ banner.title }}</h5>
+                                    {% thumbnail banner.image "270x329" crop="center" as im %}
+                                        <img src="{{ im.url }}" alt="">
+                                    {% endthumbnail %}
+                                </a>
+                            {% endfor %}
+                        </div><!--/shipping-->
+                        <br>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+{% endblock %}

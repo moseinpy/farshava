@@ -1,0 +1,53 @@
+{% load thumbnail %}
+{% load poll_extras %}
+
+<div class="col-sm-{{ col_size }}">
+    <div class="statin-image-wrapper">
+        <div class="single-stations">
+            <div class="stationinfo text-center">
+                {% if station.image %}
+                    {% thumbnail station.image "268x250" quality=90 crop="center" as im %}
+                        <img src="{{ im.url }}">
+                    {% endthumbnail %}
+                {% else %}
+                    <img src="/static/images/home/station1.jpg" alt="">
+                {% endif %}
+                <h2>{{ station.title }}</h2>
+
+
+                <h4>کد ایستگاه : {{ station.code }}</h4>
+
+
+                {% comment %}
+                <a href="#" class="btn btn-default add-to-cart"><i
+                        class="fa fa-shopping-cart"></i>افزودن به سبـد خریـد</a>
+{% endcomment %}
+            </div>
+{% comment %}
+            <div class="station-overlay">
+                <div class="overlay-content">
+                    <h2>{{ station.code }}</h2>
+
+                    <p>{{ station.title }}</p>
+                                        <a href="#" class="btn btn-default add-to-cart"><i
+                            class="fa fa-shopping-cart"></i>افزودن به سبـد خریـد</a>
+
+                </div>
+            </div>
+{% endcomment %}
+        </div>
+        <div class="choose">
+            <ul class="nav nav-pills nav-justified">
+                <li>
+                    <a href="{{ station.get_absolute_url }}">
+                        <i class="fa fa-plus-square"></i>
+                        مشاهده جزئیات
+                    </a>
+                </li>
+                {% comment %}
+                <li><a href=""><i class="fa fa-plus-square"></i>مقایسه</a></li>
+{% endcomment %}
+            </ul>
+        </div>
+    </div>
+</div>
