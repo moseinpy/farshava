@@ -18,7 +18,6 @@ from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf import settings
 from django.urls import include, path
-from utils.openai_client import initialize_openai, generate_code
 
 
 
@@ -30,17 +29,17 @@ urlpatterns = [
     path('stations/', include('station_module.urls')),
     path('user/', include('user_panel_module.urls')),
     path('admin/', admin.site.urls),
-    path('generate-code/', generate_code, name='generate_code_view'),
+    # path('generate-code/', generate_code, name='generate_code_view'),
     # path('admin-panel/', include('admin_panel.urls'))
 ]
 
 urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
-if settings.DEBUG:
-    import debug_toolbar
+# if settings.DEBUG:
+#     import debug_toolbar
 
-    urlpatterns = [
-        path('__debug_toolbar__/', include(debug_toolbar.urls)),
-        # ...
-    ] + urlpatterns
+    # urlpatterns = [
+    #     path('__debug_toolbar__/', include(debug_toolbar.urls)),
+    #     # ...
+    # ] + urlpatterns
