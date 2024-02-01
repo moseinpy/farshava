@@ -21,7 +21,7 @@
     {% if request.user.is_authenticated %}
         <div class="download-buttons">
             <a href="{% url 'rain_gauges_export_xls' %}" class="btn btn-down">دانلود در فرمت اکسل</a>
-            <button class="btn btn-down" onclick="printTable()">پرینت جدول</button>
+            {#            <button class="btn btn-down" onclick="printTable()">پرینت جدول</button>#}
         </div>
     {% endif %}
 {% endblock %}

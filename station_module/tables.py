@@ -1,5 +1,5 @@
 import django_tables2 as tables
-from .models import RainGauge, Station
+from .models import Station
 
 
 class RecentRainGaugeTable(tables.Table):
