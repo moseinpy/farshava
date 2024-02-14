@@ -1,15 +1,14 @@
+from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
-from django.http import HttpRequest, JsonResponse
+from django.http import HttpRequest
 from django.shortcuts import render, redirect
-from django.template.loader import render_to_string
 from django.urls import reverse
+from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import TemplateView
 from account_module.models import User
-# from order_module.models import Order, OrderDetail
 from .forms import EditProfileModelForm, ChangePasswordForm
-from django.contrib.auth import logout
-from django.utils.decorators import method_decorator
+
 
 @method_decorator(login_required, name='dispatch')
 class UserPanelDashboardPage(TemplateView):

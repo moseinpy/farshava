@@ -1,24 +1,22 @@
 import datetime
-
 import openpyxl
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from django.http import HttpRequest
-from django.http import HttpResponse
 from django.shortcuts import redirect
-from django.shortcuts import render
 from django.utils import timezone
-from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, DetailView
-from django_tables2 import RequestConfig
 from openpyxl.styles import Font, Alignment
-
 from site_module.models import SiteBanner
-from utils.convertors import group_list
 from utils.http_service import get_client_ip
-from .models import Station
+from utils.convertors import group_list
 from .models import StationCategory, StationType, StationVisit, StationGallery
+from django.http import HttpResponse
+from .models import Station
+from django.shortcuts import render
+from django.views import View
+from django_tables2 import RequestConfig
 from .tables import RecentRainGaugeTable
 
 
@@ -34,11 +32,13 @@ class StationListView(ListView):
         context['banners'] = SiteBanner.objects.filter(is_active=True, position__iexact='station_list')
         return context
 
+
     def get_queryset(self):
         query = super(StationListView, self).get_queryset()
         query = query.exclude(category__url_title__iexact='rain-gauge')
         category_name = self.kwargs.get('cat')
         type_name = self.kwargs.get('type')
+
 
         if type_name is not None:
             query = query.filter(type__url_title__iexact=type_name)
@@ -48,7 +48,6 @@ class StationListView(ListView):
             query = query.filter(category__url_title__iexact=category_name)
             print(query.query)
         return query
-
 
 class StationDetailView(DetailView):
     template_name = 'station_module/station_detail.html'
@@ -107,6 +106,8 @@ def station_types_component(request: HttpRequest):
     return render(request, 'station_module/components/station_type_component.html', context)
 
 
+
+
 class RainGaugeTableView(View):
     template_name = 'station_module/rain_gauge_table.html'
 
@@ -122,6 +123,7 @@ class RainGaugeTableView(View):
         return render(request, self.template_name, {'rain_gauges': rain_gauges})
 
 
+
 @csrf_exempt
 def save_rain_gauge_value(request):
     id = request.POST.get('id')
@@ -134,12 +136,12 @@ def save_rain_gauge_value(request):
 
     return HttpResponse('Data successfully saved.')
 
-
 @login_required
 def rain_gauges_export_xls(request):
     today = timezone.now()
     yesterday = today - datetime.timedelta(days=1)
-    recent_rain = Station.objects.filter(last_rainfall_date_time__range=(yesterday, today)).order_by('-recent_rainfall')
+    last_yesterday = today - datetime.timedelta(days=2)
+    recent_rain = Station.objects.filter(last_rainfall_date_time__date__gte=last_yesterday).order_by('-recent_rainfall')
     table = RecentRainGaugeTable(recent_rain)
     RequestConfig(request).configure(table)
 
@@ -171,12 +173,13 @@ def rain_gauges_export_xls(request):
 
 
 def recent_rain_gauge(request):
+
     today = timezone.now()
     yesterday = today - datetime.timedelta(days=1)
-    recent_rain = Station.objects.filter(last_rainfall_date_time__range=(yesterday, today)).order_by('-recent_rainfall')
+    last_yesterday = today - datetime.timedelta(days=2)
+    recent_rain = Station.objects.filter(last_rainfall_date_time__date__gte=last_yesterday).order_by('-recent_rainfall')
     table = RecentRainGaugeTable(recent_rain)
     RequestConfig(request).configure(table)
 
-    return render(request, 'station_module/recent_rain_gauge.html', {'table': table})
 
-
+    return render(request, 'station_module/recent_rain_gauge.html', {'table': table, 'today': today})

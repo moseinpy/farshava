@@ -1,3 +1,17 @@
+@font-face {
+
+    font-family: 'BYekan';
+    src: url('../fonts/BYekan.eot');
+    src: url('../fonts/BYekan.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/BYekan.woff') format('woff'),
+    url('../fonts/BYekan.ttf') format('truetype'),
+    url('../fonts/BYekan.svg#BYekan') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+
 .errorlist {
     padding-right: 0 !important;
 }
@@ -109,3 +123,32 @@ table td {
     border-radius: 10px;
 }*/
 
+.font-weight-bold {
+  font-family: 'BYekan', sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.numeric-input {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    color: #696763;
+    height: 46px;
+    padding: 6px 12px;
+    width: 100%;
+    font-size: 16px;
+    border-radius: 4px;
+    box-shadow: inherit;
+}
+
+.numeric-input:focus,
+.numeric-input:hover {
+    box-shadow: inherit;
+    border-color: #ff8000;
+}
+
+
+.numeric-input::-moz-placeholder {
+    color: #982424;
+}

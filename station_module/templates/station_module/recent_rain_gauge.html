@@ -1,5 +1,5 @@
 {% extends 'shared/_layout.html' %}
-
+{% load poll_extras %}
 {% load django_tables2 %}
 
 
@@ -9,10 +9,10 @@
 
 {% block content %}
     <div class="container mt-5">
-        <h3 class="text-center">بارندگی اخیر در استان</h3>
+        <h3 class="text-center">بارندگی سامنه اخیر در استان ({{ today | show_jalali_date }})</h3>
 
         <p class="lead text-center">
-            این جدول نشان دهنده میزان بارندگی اخیر در استان است. داده ها از پایگاه داده بارانسنج ها گرفته شده اند.
+            این جدول نشان دهنده میزان بارندگی سامانه اخیر در استان است. داده ها از شبکه ایستگاههای بارانسنجی گرفته شده اند.
         </p>
 
         {% render_table table %}

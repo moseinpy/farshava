@@ -36,31 +36,31 @@ class StationType(models.Model):
         return self.title
 
 
-class RainGauge(models.Model):
-    title = models.CharField(max_length=300, verbose_name='نام')
-    city = models.CharField(max_length=300, verbose_name='شهرستان', null=True, blank=True)
-    code = models.IntegerField(verbose_name='کد', unique=True)
-    parent_station = models.ForeignKey('Station', on_delete=models.CASCADE, verbose_name='ایستگاه والد', null=True, blank=True)
-    category = models.ForeignKey(StationCategory, on_delete=models.CASCADE, verbose_name='دسته بندی ها', null=True, blank=True)
-    type = models.ForeignKey(StationType, on_delete=models.CASCADE, verbose_name='نوع', null=True, blank=True)
-    recent_rainfall = models.FloatField(validators=[MinValueValidator(0)], verbose_name='بارندگی اخیر', null=True, blank=True)
-    last_rainfall_date_time = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ ثبت بارندگی اخیر', null=True, blank=True)
-    year_rainfall = models.FloatField(verbose_name='بارندگی سال', null=True, blank=True)
-    is_active = models.BooleanField(default=False, verbose_name='فعال / غیرفعال')
-    is_delete = models.BooleanField(verbose_name='حذف شده / نشده')
-
-    def __str__(self):
-        return self.title
-
-    class Meta:
-        verbose_name = 'بارانسنجی'
-        verbose_name_plural = 'بارانسنجی ها'
+# class RainGauge(models.Model):
+#     title = models.CharField(max_length=300, verbose_name='نام')
+#     city = models.CharField(max_length=300, verbose_name='شهرستان', null=True, blank=True)
+#     code = models.IntegerField(verbose_name='کد', unique=True)
+#     parent_station = models.ForeignKey('Station', on_delete=models.CASCADE, verbose_name='ایستگاه والد', null=True, blank=True)
+#     category = models.ForeignKey(StationCategory, on_delete=models.CASCADE, verbose_name='دسته بندی ها', null=True, blank=True)
+#     type = models.ForeignKey(StationType, on_delete=models.CASCADE, verbose_name='نوع', null=True, blank=True)
+#     recent_rainfall = models.FloatField(validators=[MinValueValidator(0)], verbose_name='بارندگی اخیر', null=True, blank=True)
+#     last_rainfall_date_time = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ ثبت بارندگی اخیر', null=True, blank=True)
+#     year_rainfall = models.FloatField(verbose_name='بارندگی سال', null=True, blank=True)
+#     is_active = models.BooleanField(default=False, verbose_name='فعال / غیرفعال')
+#     is_delete = models.BooleanField(verbose_name='حذف شده / نشده')
+#
+#     def __str__(self):
+#         return self.title
+#
+#     class Meta:
+#         verbose_name = 'بارانسنجی'
+#         verbose_name_plural = 'بارانسنجی ها'
 
 
 class Station(models.Model):
     title = models.CharField(max_length=300, verbose_name='نام')
     city = models.CharField(max_length=300, verbose_name='شهرستان', null=True, blank=True)
-    code = models.IntegerField(max_length=5, unique=True, blank=False, verbose_name='کد')
+    code = models.CharField(max_length=5, unique=True, blank=False, verbose_name='کد')
     category = models.ManyToManyField(
         StationCategory,
         related_name='station_categories',

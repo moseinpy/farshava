@@ -17,6 +17,10 @@
                             {% comment %}{{ register_form }}
                             {{ register_form.errors }}{% endcomment %}
 
+                            {{ register_form.username.label_tag }}
+                            {{ register_form.username }}
+                            {{ register_form.username.errors }}
+
                             {{ register_form.email.label_tag }}
                             {{ register_form.email }}
                             {{ register_form.email.errors }}

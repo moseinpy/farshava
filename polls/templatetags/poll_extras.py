@@ -13,6 +13,10 @@ def cut(value, arg):
 def show_jalali_date(value):
     return date2jalali(value)
 
+@register.filter(name="show_jalali_date_hover")
+def show_jalali_date_hour(value):
+    jalali_date = date2jalali(value)
+    return f"{value.hour}:{value.minute} - {jalali_date.year}/{jalali_date.month}/{jalali_date.day}"
 
 @register.filter(name="three_digits_currency")
 def three_digits_currency(value: int):

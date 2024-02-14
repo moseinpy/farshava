@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
@@ -22,17 +23,20 @@ class RegisterView(View):
     def post(self, request: HttpRequest):
         register_form = RegisterForm(request.POST)
         if register_form.is_valid():
+            user_name = register_form.cleaned_data.get('username')
             user_email = register_form.cleaned_data.get('email')
             user_password = register_form.cleaned_data.get('password')
-            user: bool = User.objects.filter(email__iexact=user_email).exists()
-            if user:
-                register_form.add_error('email', "ایمیل وارد شده تکراری می باشد")
+            if User.objects.filter(Q(username__iexact=user_name) | Q(email__iexact=user_email)).exists():
+                if User.objects.filter(username__iexact=user_name).exists():
+                    register_form.add_error('username', "نام کاربری وارد شده تکراری می باشد.")
+                elif User.objects.filter(email__iexact=user_email).exists():
+                    register_form.add_error('email', "ایمیل وارد شده تکراری می باشد")
             else:
                 new_user = User(
+                    username=user_name,
                     email=user_email,
                     email_active_user=get_random_string(72),
                     is_active=False,
-                    username=user_email,
                 )
                 new_user.set_password(user_password)
                 new_user.save()

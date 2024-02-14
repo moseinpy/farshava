@@ -3,11 +3,11 @@ from . import models
 
 
 # Register your models here.
-@admin.register(models.RainGauge)
-class RainGaugeAdmin(admin.ModelAdmin):
-    list_display = ['title', 'code', 'city', 'recent_rainfall']
-    list_editable = ['code', 'city', 'recent_rainfall']
-
+# @admin.register(models.RainGauge)
+# class RainGaugeAdmin(admin.ModelAdmin):
+#     list_display = ['title', 'code', 'city', 'recent_rainfall']
+#     list_editable = ['code', 'city', 'recent_rainfall']
+#
 
 @admin.register(models.Station)
 class StationAdmin(admin.ModelAdmin):

@@ -46,11 +46,11 @@ function showLargeImage(imageSrc) {
 $(document).ready(function () {
     $(document).on("click", ".editable", function () {
         var value = $(this).text();
-        var input = "<input type='number' min='0' value='" + value + "' class='form-control text-center'>";
+        var input = "<input type='number' min='0' value='" + value + "' class='numeric-input text-center'>";
         $(this).html(input);
         $(this).removeClass("editable");
     })
-    $(document).on("blur", ".form-control", function () {
+    $(document).on("blur", ".numeric-input", function () {
         var value = $(this).val();
         var td = $(this).parent(td);
 
