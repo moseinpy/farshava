@@ -1,5 +1,5 @@
 from django import template
-from jalali_date import date2jalali
+from jalali_date import date2jalali, datetime2jalali
 
 register = template.Library()
 

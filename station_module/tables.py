@@ -1,7 +1,7 @@
 import django_tables2 as tables
 from .models import Station
-from jalali_date import date2jalali
-
+from jalali_date import date2jalali, datetime2jalali
+from polls.templatetags.poll_extras import show_jalali_date_hour
 
 
 class RecentRainGaugeTable(tables.Table):
@@ -14,8 +14,9 @@ class RecentRainGaugeTable(tables.Table):
         if value is None:
             return ''
         else:
-            jalali_date = date2jalali(value)
-            return f"{value.hour}:{value.minute} -- {jalali_date.year}/{jalali_date.month}/{jalali_date.day}"
+            return datetime2jalali(value).strftime('%H:%M:%S - %Y/%m/%d')
+            # jalali_date = date2jalali(value)
+            # return f"{value.hour}:{value.minute} -- {jalali_date.year}/{jalali_date.month}/{jalali_date.day}"
 
 
     class Meta:

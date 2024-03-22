@@ -6,7 +6,7 @@ from django.http import HttpRequest
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 from openpyxl.styles import Font, Alignment
 from site_module.models import SiteBanner
 from utils.http_service import get_client_ip
@@ -18,6 +18,7 @@ from django.shortcuts import render
 from django.views import View
 from django_tables2 import RequestConfig
 from .tables import RecentRainGaugeTable
+from .forms import StationRainModelForm
 
 
 class StationListView(ListView):
@@ -32,13 +33,11 @@ class StationListView(ListView):
         context['banners'] = SiteBanner.objects.filter(is_active=True, position__iexact='station_list')
         return context
 
-
     def get_queryset(self):
         query = super(StationListView, self).get_queryset()
         query = query.exclude(category__url_title__iexact='rain-gauge')
         category_name = self.kwargs.get('cat')
         type_name = self.kwargs.get('type')
-
 
         if type_name is not None:
             query = query.filter(type__url_title__iexact=type_name)
@@ -48,6 +47,7 @@ class StationListView(ListView):
             query = query.filter(category__url_title__iexact=category_name)
             print(query.query)
         return query
+
 
 class StationDetailView(DetailView):
     template_name = 'station_module/station_detail.html'
@@ -106,8 +106,6 @@ def station_types_component(request: HttpRequest):
     return render(request, 'station_module/components/station_type_component.html', context)
 
 
-
-
 class RainGaugeTableView(View):
     template_name = 'station_module/rain_gauge_table.html'
 
@@ -123,7 +121,6 @@ class RainGaugeTableView(View):
         return render(request, self.template_name, {'rain_gauges': rain_gauges})
 
 
-
 @csrf_exempt
 def save_rain_gauge_value(request):
     id = request.POST.get('id')
@@ -136,12 +133,13 @@ def save_rain_gauge_value(request):
 
     return HttpResponse('Data successfully saved.')
 
+
 @login_required
 def rain_gauges_export_xls(request):
     today = timezone.now()
     yesterday = today - datetime.timedelta(days=1)
     last_yesterday = today - datetime.timedelta(days=2)
-    recent_rain = Station.objects.filter(last_rainfall_date_time__date__gte=last_yesterday).order_by('-recent_rainfall')
+    recent_rain = Station.objects.filter(last_rainfall_date_time__date__gte=yesterday).order_by('-recent_rainfall')
     table = RecentRainGaugeTable(recent_rain)
     RequestConfig(request).configure(table)
 
@@ -152,7 +150,7 @@ def rain_gauges_export_xls(request):
     ws.sheet_view.rightToLeft = True
 
     # Write table headers
-    headers = ['ردیف', 'شهرستان', 'نام', 'مقدار بارندگی (میلیمتر)']
+    headers = ['ردیف', 'شهرستان', 'نام', 'مقدار بارندگی (میلیمتر)', 'زمان ثبت بارش']
     header_font = Font(bold=True, size=12, color='000000')
     header_fill = Alignment(horizontal='center', vertical='center')
     for col_num, header in enumerate(headers, 1):
@@ -173,13 +171,38 @@ def rain_gauges_export_xls(request):
 
 
 def recent_rain_gauge(request):
-
     today = timezone.now()
     yesterday = today - datetime.timedelta(days=1)
     last_yesterday = today - datetime.timedelta(days=2)
-    recent_rain = Station.objects.filter(last_rainfall_date_time__date__gte=last_yesterday).order_by('-recent_rainfall')
+    recent_rain = Station.objects.filter(last_rainfall_date_time__date__gte=yesterday).order_by('-recent_rainfall')
     table = RecentRainGaugeTable(recent_rain)
     RequestConfig(request).configure(table)
 
-
     return render(request, 'station_module/recent_rain_gauge.html', {'table': table, 'today': today})
+
+
+class StationRainView(View):
+    form_class = StationRainModelForm
+    template_name = 'station_module/station_rain.html'
+    success_url = '/station-rain/'
+
+    def get_queryset(self):
+        workplace_code = self.request.user.employee.workplace_code
+        stations = Station.objects.filter(parent_station__code__exact=workplace_code).all()
+        return stations
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['stations'] = self.get_queryset().all()
+        return context
+
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            # **Added line to save the form data**
+            form.save(form.save(update_fields=['بارندگی_اخیر']))
+            return redirect('station-rain')
+        else:
+            return self.render_to_response(self.get_context_data(form=form))
+

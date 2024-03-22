@@ -157,8 +157,10 @@ EMAIL_HOST_USER = 'farsmet.didbani@gmail.com'
 EMAIL_HOST_PASSWORD = 'cvsmxfrhrcfmhara'
 EMAIL_PORT = 587
 
-MEDIA_ROOT = BASE_DIR / 'uploads'
+
 MEDIA_URL = '/medias/'
+MEDIA_ROOT = BASE_DIR / 'uploads'
+
 
 STATICFILES_DIRS = [
     BASE_DIR / 'static'
