@@ -7,15 +7,14 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4  # update to version 4
+      - uses: actions/setup-node@v4  # keep version 4 for Node.js 16 compatibility
         with:
-          node-version: "16"
+          node-version: "16"  # keep Node.js 16 for Liara CLI v4 compatibility (explained later)
       - name: update-liara
         env:
           LIARA_TOKEN: ${{ secrets.LIARA_API_TOKEN }}
         run: |
-          npm i -g @liara/cli@5
+          npm i -g @liara/cli@4  # install Liara CLI v4 (compatible with Node.js 16)
           liara deploy --app="didbani" --api-token="$LIARA_TOKEN" --no-app-logs
