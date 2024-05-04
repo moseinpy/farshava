@@ -21,16 +21,20 @@
             <tbody>
             {% for gauge in rain_gauges %}
                 <tr data-id="{{ gauge.id }}">
-                    <td class="non_editable text-center" data-id="{{ gauge.id }}" data-type="id">{{ gauge.id }}</td>
-                    <td class="non_editable text-center" data-id="{{ gauge.id }}" data-type="id">{{ gauge.last_rainfall_date_time }}</td>
+                    <td class="non_editable text-center" data-id="{{ gauge.id }}" data-type="id">{{ forloop.counter }}</td>
+                    <td class="non_editable text-center" data-id="{{ gauge.id }}"
+                        data-type="id">{{ gauge.last_rainfall_date_time }}</td>
                     <td class="non_editable text-center" data-id="{{ gauge.id }}" data-type="city">{{ gauge.city }}</td>
-                    <td class="non_editable text-center" data-id="{{ gauge.id }}" data-type="title">{{ gauge.title }}</td>
-                    <td class="editable text-center" data-id="{{ gauge.id }}" data-type="recent_rainfall">{{ gauge.recent_rainfall }}</td>
+                    <td class="non_editable text-center" data-id="{{ gauge.id }}"
+                        data-type="title">{{ gauge.title }}</td>
+                    <td class="editable text-center" data-id="{{ gauge.id }}" data-type="recent_rainfall"></td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
     </div>
+    <div class="download-buttons">
+        <button type="submit" class="btn btn-down">ثبت بارندگی‌ها</button>
+    </div>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 {% endblock %}
-

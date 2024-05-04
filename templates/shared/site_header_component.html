@@ -44,13 +44,13 @@
                         </a>
                     </div>
                 </div>
-            <div>
-                {% if request.user.is_authenticated %}
-                                <li class="wellcome">
-                                    همکار گرامی آقای  {{ request.user.first_name }} {{ request.user.last_name }} خوش آمدید.
-                                </li>
-                {% endif %}
-            </div>
+                <div>
+                    {% if request.user.is_authenticated %}
+                        <li class="wellcome">
+                            {{ request.user.first_name }} {{ request.user.last_name }} خوش آمدید
+                        </li>
+                    {% endif %}
+                </div>
 
                 <div class="col-sm-8 header-middle-menu">
                     <div class="shop-menu pull-right">
@@ -59,7 +59,8 @@
                                 {% if request.user.is_superuser %}
                                     <li><a href="{% url  'home_page' %}"><i class="fa fa-user"></i> کاربر ادمین</a></li>
                                 {% endif %}
-                                <li><a href="{% url  'user_panel_dashboard' %}"><i class="fa fa-user"></i> پنل کاربری</a></li>
+                                <li><a href="{% url  'user_panel_dashboard' %}"><i class="fa fa-user"></i> پنل
+                                    کاربری</a></li>
 
                                 <li><a href="{% url 'logout_page' %}"><i class="fa fa-sign-out"></i> خروج</a></li>
                             {% else %}
@@ -104,29 +105,52 @@
                             <li>
                                 <a href="{% url 'station-list' %}"
                                    class="{% if request.resolver_match.url_name == 'station-list' %}active{% endif %}">
-                                    ایستگاهها
+                                    مراکز ما
                                 </a>
                             </li>
-                        {% if request.user.employee %}
-                            <li>
-                                <a href="{% url 'rain-gauge-table' %}"
-                                   class="{% if request.resolver_match.url_name == 'rain-gauge-table' %}active{% endif %}">
-                                    ثبت بارش اخیر
-                                </a>
-                            </li>
-                        {% endif %}
                             <li>
                                 <a href="{% url 'article_list' %}"
                                    class="{% if request.resolver_match.url_name == 'article_list' %}active{% endif %}">
-                                    اخبار
+                                    مقالات
                                 </a>
                             </li>
                             <li>
                                 <a href="{% url 'recent-rain-gauge' %}"
                                    class="{% if request.resolver_match.url_name == 'recent-rain-gauge' %}active{% endif %}">
-                                     بارش اخیر
+                                    بارش اخیر
                                 </a>
                             </li>
+                            {% if request.user.employee %}
+                                <li class="dropdown-hover">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">ثبت و بروزرسانی<b
+                                            class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="{% url 'rain-gauge-table' %}"
+                                               class="{% if request.resolver_match.url_name == 'rain-gauge-table' %}active{% endif %}">
+                                            ثبت بارندگی اخیر
+                                        </a></li>
+                                        <li><a href="{% url 'table_update_rainfall' %}" class=
+                                                "{% if request.resolver_match.url_name == 'table_update_rainfall' %}active{% endif %}">ثبت
+                                            بارش 3 ساعته و اخیر</a></li>
+                                        <li><a href="#">ثبت اضافه کاری</a></li>
+                                        <li><a href="#">ثبت مرخصی</a></li>
+                                    </ul>
+                                </li>
+                            {% endif %}
+                            <li class="dropdown-hover">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">آمار و اطلاعات<b
+                                        class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{% url 'stations_table_3h_recent_rainfall' %}">بارش 3 ساعته و اخیر</a></li>
+                                    {% if request.user.employee %}
+                                        <li><a href="#">اضافه کاری</a></li>
+                                    {% endif %}
+                                {% if request.user.employee %}
+                                    <li><a href="#">مرخصی</a></li>
+                                {% endif %}
+                                </ul>
+                            </li>
+
                             <li>
                                 <a href="{% url 'about_page' %}"
                                    class="{% if request.resolver_match.url_name == 'about_page' %}active{% endif %}">
@@ -141,7 +165,6 @@
                         </ul>
                     </div>
                 </div>
-
             </div>
         </div>
     </div><!--/header-bottom-->

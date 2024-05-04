@@ -1,6 +1,7 @@
 from django.db import models
 
 
+
 # Create your models here.
 
 
@@ -54,6 +55,7 @@ class Slider(models.Model):
     url_title = models.CharField(max_length=200, verbose_name='عنوان لینک')
     description = models.TextField(verbose_name='توضیحات اسلایدر')
     image = models.ImageField(upload_to='images/slider', verbose_name='تصویر اسلایدر')
+    image_url = models.URLField(max_length=400, null=True, blank=True, verbose_name='آدرس تصویر اسلاید')
     is_active = models.BooleanField(default=True, verbose_name='فعال / غیر فعال')
 
     class Meta:
@@ -75,6 +77,7 @@ class SiteBanner(models.Model):
     title = models.CharField(max_length=200, verbose_name='عنوان')
     url = models.URLField(max_length=400, null=True, blank=True, verbose_name='آدرس بنر')
     image = models.ImageField(upload_to='images/banners', verbose_name='تصویر بنر')
+    video = models.FileField(upload_to='videos/banners', verbose_name='ویدیو بنر', null=True, blank=True)
     is_active = models.BooleanField(verbose_name='فعال / غیر فعال')
     position = models.CharField(max_length=200, choices=SiteBannerPositions.choices, verbose_name='جایگاه نمایشی')
 

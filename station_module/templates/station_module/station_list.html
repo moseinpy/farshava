@@ -2,7 +2,7 @@
 {% load thumbnail %}
 {% load render_partial %}
 
-{% block title %}لیست ایستگاهها{% endblock %}
+{% block title %}لیست مراکز{% endblock %}
 
 {% block content %}
     <section>
@@ -12,7 +12,7 @@
                 <div class="col-sm-9 padding-right">
                     {% if stations %}
                         <div class="features_items"><!--features_items-->
-                            <h2 class="title text-center">ایستگاهها</h2>
+                            <h2 class="title text-center">مراکز</h2>
                             {% for station in stations %}
                                 {% include 'includes/station_item_partial.html' with station=station col_size=4 %}
                             {% endfor %}
@@ -40,54 +40,43 @@
                         </div><!--features_items-->
                     {% else %}
                         <div class="alert alert-warning">
-                            <p>هیچ محصولی یافت نشد</p>
+                            <p>یافت نشد</p>
                         </div>
                     {% endif %}
                 </div>
                 <div class="col-sm-3">
                     <div class="left-sidebar">
+                        <div class="shipping text-center"><!--shipping-->
+                            {% for banner in banners %}
+                                <a href="{{ banner.url }}">
+                                    <h5>{{ banner.title }}</h5>
+                                    {% if banner.video %}
+                                        <video class="my-video" controls>
+                                            <source src="{{ banner.video.url }}" type="{{ banner.video.content_type }}">
+                                        </video>
+                                    {% else %}
+                                        {% thumbnail banner.image "270x329" crop="center" as im %}
+                                            <img src="{{ im.url }}" alt="">
+                                        {% endthumbnail %}
+                                    {% endif %}
+                                </a>
+                            {% endfor %}
+                        </div><!--/shipping-->
+                        <hr>
+
+
                         {% render_partial 'station_module.views.station_categories_component' %}
                         {% render_partial 'station_module.views.station_types_component' %}
-
-
-{% comment %}
-                        <div class="code-range"><!--code-range-->
-                            <h2>فیلتـر قیمـت</h2>
-                            <div class="well">
-                                <input
-                                        type="text"
-                                        class="span2"
-                                        value="{{ start_code }},{{ end_code }}"
-                                        data-slider-min="0"
-                                        data-slider-max="{{ db_max_code }}"
-                                        data-slider-step="1000"
-                                        data-slider-value="[{{ start_code }},{{ end_code }}]"
-                                        id="sl2">
-                                <br/>
-                                <b>{{ db_max_code }}</b> <b class="pull-left">0</b>
-                            </div>
-                        </div><!--/code-range-->
-{% endcomment %}
-
+                        <hr>
                         <div>
                             <form action="" method="get" id="filter_form">
                                 <input type="hidden" name="page" id="page" value="{{ page_obj.number }}">
                                 <input type="hidden" name="start_code" id="start_code" value="{{ start_code }}">
                                 <input type="hidden" name="end_code" id="end_code" value="{{ end_code }}">
                             </form>
-{#                            <button class="btn btn-success btn-block" onclick="filterstations">فیلتر</button>#}
+                            {#                            <button class="btn btn-success btn-block" onclick="filterstations">فیلتر</button>#}
                         </div>
 
-                        <div class="shipping text-center"><!--shipping-->
-                            {% for banner in banners %}
-                                <a href="{{ banner.url }}">
-                                    <h5>{{ banner.title }}</h5>
-                                    {% thumbnail banner.image "270x329" crop="center" as im %}
-                                        <img src="{{ im.url }}" alt="">
-                                    {% endthumbnail %}
-                                </a>
-                            {% endfor %}
-                        </div><!--/shipping-->
                         <br>
                     </div>
                 </div>

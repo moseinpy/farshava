@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,7 +32,11 @@ INTERNAL_IPS = [
 
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "default_key_if_not_set")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'farshava.ir',
+    'www.farshava.ir',
+    '127.0.0.1'
+]
 
 # Application definition
 
@@ -103,12 +108,44 @@ LOGIN_URL = '/login/'
 
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'data', 'db.sqlite3'),
+#     }
+# }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+   'default': {
+       'ENGINE': 'django.db.backends.postgresql',
+       'NAME': 'postgres',
+       'USER': 'postgres',
+       'PASSWORD': 'Ma13561227',
+       'HOST': 'localhost',
+       'PORT': '5432',
+   }
 }
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "postgres",
+#         "USER": "root",
+#         "PASSWORD": "MkJxFnccgV1zp2pdixmw4ncx",
+#         "HOST": "postgres-db",
+#         "PORT": "5432",
+#     }
+# }
+
+# DATABASES = {
+#     'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -141,6 +178,8 @@ USE_L10N = True
 
 USE_TZ = True
 
+CHARSET = 'utf-8'
+
 SANDBOX = True
 
 MERCHANT = '123456789123456789123456789123456789'
@@ -157,10 +196,8 @@ EMAIL_HOST_USER = 'farsmet.didbani@gmail.com'
 EMAIL_HOST_PASSWORD = 'cvsmxfrhrcfmhara'
 EMAIL_PORT = 587
 
-
-MEDIA_URL = '/medias/'
-MEDIA_ROOT = BASE_DIR / 'uploads'
-
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 STATICFILES_DIRS = [
     BASE_DIR / 'static'

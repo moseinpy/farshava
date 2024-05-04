@@ -1,8 +1,22 @@
 {
+  "platform": "django",
+  "django": {
+    "pythonVersion": "3.10",
+    "collectStatic": false,
+    "compileMessages": false,
+    "modifySettings": true,
+    "timezone": "Asia/Tehran"
+
+  },
+  "app": "didbani",
   "disks": [
     {
-      "name": "sqlite",
-      "mountTo": "data"
+      "name": "staticfiles",
+      "mountTo": "staticfiles"
+    },
+    {
+      "name": "media",
+      "mountTo": "media"
     }
   ]
 }

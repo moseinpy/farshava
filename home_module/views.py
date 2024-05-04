@@ -4,6 +4,10 @@ from django.views.generic import TemplateView
 from station_module.models import Station, StationCategory
 from utils.convertors import group_list
 from site_module.models import SiteSetting, FooterLinkBox, Slider, SiteBanner
+from datetime import date, timedelta
+from jalali_date import date2jalali
+
+
 
 
 class HomeView(TemplateView):
@@ -13,12 +17,23 @@ class HomeView(TemplateView):
         context = super().get_context_data(**kwargs)
         sliders = Slider.objects.filter(is_active=True)
         context['sliders'] = sliders
-        latest_stations = Station.objects.exclude(category__url_title__iexact='rain-gauge').filter(is_active=True, is_delete=False).order_by('-id')[:12]
-        most_visit_stations = Station.objects.exclude(category__url_title__iexact='rain-gauge').filter(is_active=True, is_delete=False).annotate(
-            visit_count=Count('stationvisit')).order_by('-visit_count')[:4]
-        context['latest_stations'] = group_list(latest_stations)
-        context['most_visit_stations'] = group_list(most_visit_stations)
-        categories = list(StationCategory.objects.annotate(station_count=Count('station_categories')).filter(is_active=True, is_delete=False, station_count__gt=0)[:6])
+        main_synoptic_stations = Station.objects.filter(category__url_title__iexact='main-synoptic').filter(
+            is_active=True, is_delete=False).order_by('-id')
+        additional_synoptic_stations = Station.objects.filter(category__url_title__iexact='additional-synoptic').filter(
+            is_active=True, is_delete=False).order_by('-id')
+        climatology_stations = Station.objects.filter(category__url_title__iexact='climatology').filter(is_active=True, is_delete=False).order_by('-id')
+        day = date2jalali(date.today() - timedelta(0)).strftime('%Y%m%d')
+        # tahlil = f'https://www.farsmet.ir/DM/Files/files/tahlil{day}.pdf'
+        # vaziat = f'https://www.farsmet.ir/DM/Files/files/vaziat{day}.png'
+        # context['tahlil'] = tahlil
+        # context['vaziat'] = vaziat
+        context['main_synoptic_stations'] = group_list(main_synoptic_stations)
+        context['additional_synoptic_stations'] = group_list(additional_synoptic_stations)
+        context['climatology_stations'] = group_list(climatology_stations)
+        categories = list(
+            StationCategory.objects.annotate(station_count=Count('station_categories')).filter(is_active=True,
+                                                                                               is_delete=False,
+                                                                                               station_count__gt=0)[:6])
         categories_stations = []
 
         for category in categories:
@@ -44,11 +59,22 @@ def site_header_component(request):
 def site_footer_component(request):
     setting: SiteSetting = SiteSetting.objects.filter(is_main_setting=True).first()
     footer_link_boxes = FooterLinkBox.objects.all()
+
     context = {
         'site_setting': setting,
-        'footer_link_boxes': footer_link_boxes
+        'footer_link_boxes': footer_link_boxes,
     }
     return render(request, 'shared/site_footer_component.html', context)
+
+
+# def site_footer_component(request):
+#     setting: SiteSetting = SiteSetting.objects.filter(is_main_setting=True).first()
+#     footer_link_boxes = FooterLinkBox.objects.all()
+#     context = {
+#         'site_setting': setting,
+#         'footer_link_boxes': footer_link_boxes
+#     }
+#     return render(request, 'shared/site_footer_component.html', context)
 
 
 class AboutView(TemplateView):
@@ -59,4 +85,3 @@ class AboutView(TemplateView):
         site_setting: SiteSetting = SiteSetting.objects.filter(is_main_setting=True).first()
         context['site_setting'] = site_setting
         return context
-

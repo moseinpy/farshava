@@ -6,16 +6,16 @@
         <div class="single-stations">
             <div class="stationinfo text-center">
                 {% if station.image %}
-                    {% thumbnail station.image "268x250" quality=90 crop="center" as im %}
-                        <img src="{{ im.url }}">
-                    {% endthumbnail %}
+{#                    {% thumbnail station.image "268x250" quality=90 crop="center" as im %}#}
+                        <img class="my-image" src="{{ station.image.url }}">
+{#                    {% endthumbnail %}#}
                 {% else %}
                     <img src="/static/images/home/station1.jpg" alt="">
                 {% endif %}
                 <h2>{{ station.title }}</h2>
 
 
-                <h4>کد ایستگاه : {{ station.code }}</h4>
+                <h4>شناسه ایستگاه : {{ station.code }}</h4>
 
 
                 {% comment %}

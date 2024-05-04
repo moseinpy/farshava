@@ -1,0 +1,45 @@
+{% extends 'shared/_layout.html' %}
+
+{% block title %}
+    ثبت بارش اخیر
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-5 table-responsive">
+        <head>
+            <meta charset="UTF-8">
+            <title>آپدیت بارش ایستگاه‌ها</title>
+        </head>
+        <body>
+        <form method="post">
+            {% csrf_token %}
+            <table class="my-table">
+                <thead>
+                <tr>
+                    <th>نام ایستگاه</th>
+                    <th>بارش 3 ساعت اخیر</th>
+                    <th>بارش اخیر</th>
+                    <th>بارش سال</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for station in stations %}
+                    <tr>
+                        <td class="my-cell">{{ station.title }}</td>
+                        <td><input type="number" class="input-rainfall" name="rainfall_3h_{{ station.id }}" min="0"
+                                   step="0.1"></td>
+                        <td><input type="number" class="input-rainfall" name="recent_rainfall_{{ station.id }}" min="0"
+                                   step="0.1"></td>
+                        <td><input type="number" class="input-rainfall" name="year_rainfall_{{ station.id }}" min="0"
+                                   step="0.1"></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="form-container">
+                <button type="submit" class="btn-save">ذخیره</button>
+            </div>
+        </form>
+        </body>
+    </div>
+{% endblock %}

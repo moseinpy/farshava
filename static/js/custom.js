@@ -24,15 +24,6 @@ function fillParentId(parentId) {
     document.getElementById('comment_form').scrollIntoView({behavior: "smooth"});
 }
 
-/*function filterStations() {
-    const filterCode = $('#sl2').val();
-    const start_code = filterCode.split(',')[0];
-    const end_code = filterCode.split(',')[1];
-    $('#start_code').val(start_code);
-    $('#end_code').val(end_code);
-    $('#filter_form').submit();
-}*/
-
 function fillPage(page) {
     $('#page').val(page);
     $('#filter_form').submit();
@@ -44,70 +35,56 @@ function showLargeImage(imageSrc) {
 }
 
 $(document).ready(function () {
+    var editedCells = [];
+
     $(document).on("click", ".editable", function () {
-        var value = $(this).text();
+        var $td = $(this);
+        var value = $td.text();
         var input = "<input type='number' min='0' value='" + value + "' class='numeric-input text-center'>";
-        $(this).html(input);
-        $(this).removeClass("editable");
-    })
+        $td.html(input).removeClass("editable");
+        $('.numeric-input').focus();
+    });
+
     $(document).on("blur", ".numeric-input", function () {
-        var value = $(this).val();
-        var td = $(this).parent(td);
+        var $input = $(this);
+        var value = $input.val();
+        var $td = $input.closest("td");
 
         // بررسی اعتبار داده
         if (isNaN(value) || value < 0) {
             alert("فقط اعداد مثبت مجاز هستند.");
-            $(this).val("");
-            $(this).focus();
+            $input.val("").focus();
             return;
         }
 
-        $(this).remove();
-        td.html(value);
-        td.addClass("editable text-center");
-        var type = td.data("type");
-        sendToServer(td.data("id"), value, type);
-    })
-    $(document).on("keypress", "input-data", function (e) {
-        var key = e.which;
-        if (key == 13) {
-            var value = $(this).val();
-            var td = $(this).parent(td);
+        $td.html(value).addClass("editable text-center");
+        editedCells.push({ id: $td.data("id"), value: value, type: $td.data("type") });
+    });
 
-            // بررسی اعتبار داده
-            if (isNaN(value) || value < 0) {
-                alert("فقط اعداد مثبت مجاز هستند.");
-                $(this).val("");
-                $(this).focus();
-                return;
-            }
-
-            $(this).remove();
-            td.html(value);
-            td.addClass("editable");
-            var type = td.data("type");
-            sendToServer(td.data("id"), value, type);
-        }
+    $("button[type='submit']").click(function () {
+        $.each(editedCells, function (index, cell) {
+            sendToServer(cell.id, cell.value, cell.type);
+        });
     });
 
     function sendToServer(id, value, type) {
-        console.log(id);
-        console.log(value);
-        console.log(type);
+        console.log(id, value, type); // برای تست
         $.ajax({
-            url: "http://127.0.0.1:8000/stations/save-rain-gauge-value/",
+            url: "https://farshava.ir/stations/save-rain-gauge-value/",
+            // url: "http://127.0.0.1:8000/stations/save-rain-gauge-value/",
+
             type: "POST",
-            data: {id: id, type: type, value: value},
-        })
-            .done(function (response) {
+            data: { id: id, type: type, value: value },
+            success: function (response) {
                 console.log(response);
-            })
-            .fail(function () {
+            },
+            error: function () {
                 console.log("error");
-            });
+            }
+        });
     }
-})
-;
+});
+
 
 function printTable() {
     window.print();

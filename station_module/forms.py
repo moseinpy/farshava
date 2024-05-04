@@ -1,6 +1,5 @@
 from django import forms
 from .models import Station
-
 class StationRainModelForm(forms.ModelForm):
     class Meta:
         model = Station
@@ -16,5 +15,3 @@ class StationRainModelForm(forms.ModelForm):
                 'class': 'form-control',
             }),
         }
-
-
