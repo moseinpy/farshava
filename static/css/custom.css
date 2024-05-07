@@ -176,3 +176,185 @@ table td {
     /*width: 270px;*/
     /*height: 329px;*/
 }
+
+.rtl {
+    direction: rtl;
+    text-align: right;
+}
+
+.station-title {
+    background-color: #f8f9fa;
+    text-align: -webkit-center;
+    font-weight: bolder;
+    font-size: 24px;
+    color: orange;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+.form-row {
+    display: flex;
+    text-align: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    color: #000dff;
+}
+
+.form-group {
+    margin: 0 10px;
+}
+
+.separator {
+    border-top: 2px solid #010205;
+    margin: 20px 0;
+}
+
+
+.my-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.my-table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.my-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.my-table th {
+    background-color: #f2f2f2;
+    color: #333;
+}
+
+.my-cell {
+    font-weight: bold;
+    text-align: justify;
+    font-size: small;
+}
+
+.station-row:hover {
+    background-color: #f5f5f5;
+}
+
+.input-rainfall {
+    width: 100%;
+    height: 100%;
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.input-rainfall::-webkit-inner-spin-button,
+.input-rainfall::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.btn-save {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-save {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    /* اضافه کردن این خط برای مرکز قرار دادن دکمه */
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.btn-save:hover {
+    background-color: #45a049;
+}
+
+/*!* استایل اصلی برای نوار ناوبری *!*/
+/*.navbar-nav {*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*    list-style: none;*/
+/*}*/
+
+/*!* استایل لینک‌های نوار ناوبری *!*/
+/*.navbar-nav > li > a {*/
+/*    display: block;*/
+/*    padding: 10px 15px;*/
+/*    text-decoration: none;*/
+/*    color: #333; !* رنگ متن لینک‌ها *!*/
+/*    background-color: #f8f8f8; !* رنگ پس‌زمینه لینک‌ها *!*/
+/*    transition: all 0.3s ease; !* افکت انتقال برای hover *!*/
+/*}*/
+
+/*!* تغییر رنگ لینک‌ها هنگام قرار گرفتن موس بر روی آن‌ها *!*/
+/*.navbar-nav > li > a:hover,*/
+/*.navbar-nav > li > a.active {*/
+/*    color: #fff; !* رنگ متن لینک‌ها هنگام hover *!*/
+/*    background-color: #007bff; !* رنگ پس‌زمینه لینک‌ها هنگام hover *!*/
+/*}*/
+
+/*!* استایل منوهای تو در تو *!*/
+/*.dropdown-hover {*/
+/*    position: relative;*/
+/*}*/
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    min-width: 200px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    border-radius: 10px;
+    background-color: #f8f8f8;
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    z-index: 1000;
+}
+
+/* نمایش منوهای تو در تو هنگام قرار گرفتن موس بر روی آن‌ها */
+.dropdown-hover:hover .dropdown-menu {
+    display: block;
+}
+
+/*!* استایل زیرمنوها *!*/
+/*.dropdown-menu > li > a {*/
+/*    padding: 5px 20px;*/
+/*    color: #333;*/
+/*    background-color: transparent;*/
+/*    transition: all 0.3s ease;*/
+/*}*/
+
+/*.dropdown-menu > li > a:hover {*/
+/*    color: #fff;*/
+/*    background-color: #007bff;*/
+/*}*/

@@ -121,27 +121,27 @@ LOGIN_URL = '/login/'
 #     }
 # }
 
-DATABASES = {
-   'default': {
-       'ENGINE': 'django.db.backends.postgresql',
-       'NAME': 'postgres',
-       'USER': 'postgres',
-       'PASSWORD': 'Ma13561227',
-       'HOST': 'localhost',
-       'PORT': '5432',
-   }
-}
-
 # DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": "postgres",
-#         "USER": "root",
-#         "PASSWORD": "MkJxFnccgV1zp2pdixmw4ncx",
-#         "HOST": "postgres-db",
-#         "PORT": "5432",
-#     }
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': 'postgres',
+#        'USER': 'postgres',
+#        'PASSWORD': 'Ma13561227',
+#        'HOST': 'localhost',
+#        'PORT': '5432',
+#    }
 # }
+#
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "postgres",
+        "USER": "root",
+        "PASSWORD": "MkJxFnccgV1zp2pdixmw4ncx",
+        "HOST": "postgres-db",
+        "PORT": "5432",
+    }
+}
 
 # DATABASES = {
 #     'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))

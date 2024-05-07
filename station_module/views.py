@@ -359,7 +359,7 @@ def recent_rain_gauge(request):
     return render(request, 'station_module/recent_rain_gauge.html',
                   {'table': table, 'today': today, 'map_html': map_html, 'allowed_users': allowed_users})
 
-
+@login_required
 def table_update_rainfall(request):
     current_user = request.user
     workplace_code = None

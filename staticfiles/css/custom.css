@@ -11,7 +11,6 @@
 }
 
 
-
 .errorlist {
     padding-right: 0 !important;
 }
@@ -102,12 +101,12 @@ table td {
 }
 
 .wellcome {
-  background-color: #ffffff;
-  padding: 5px;
-  border-radius: 5px;
-  font-family: "IRANSans", sans-serif;
-  font-size: 10px;
-  color: #ff8000;
+    background-color: #ffffff;
+    padding: 5px;
+    border-radius: 5px;
+    font-family: "IRANSans", sans-serif;
+    font-size: 10px;
+    color: #ff8000;
     text-align: center;
 }
 
@@ -124,10 +123,10 @@ table td {
 }*/
 
 .font-weight-bold {
-  font-family: 'BYekan', sans-serif;
-  font-size: 20px;
-  font-weight: bold;
-  text-align: center;
+    font-family: 'BYekan', sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
 }
 
 .numeric-input {
@@ -154,8 +153,26 @@ table td {
 }
 
 .my-slider {
-  width: 500px;
-  height: 400px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+    width: 500px;
+    height: 400px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.my-paragraph {
+    text-align: justify;
+}
+
+.my-image {
+    width: 268px;
+    height: 250px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.my-video {
+    width: 100%;
+    height: auto;
+    /*width: 270px;*/
+    /*height: 329px;*/
 }
