@@ -1,4 +1,5 @@
 {% extends 'shared/_layout.html' %}
+{% load poll_extras %}
 
 {% block title %}
     ثبت بارش اخیر
@@ -11,6 +12,8 @@
             <title>آپدیت بارش ایستگاه‌ها</title>
         </head>
         <body>
+        <h3 class="text-center">میزان بارش سامانه اخیر هواشناسی در استان فارس </h3>
+
         <table class="my-table">
             <thead>
             <tr>
@@ -19,6 +22,7 @@
                 <th class="my-cell">بارندگی 3 ساعته</th>
                 <th class="my-cell">بارندگی سامانه اخیر (میلیمتر)</th>
                 <th class="my-cell">بارندگی سال زراعی تا کنون (میلیمتر)</th>
+                <th class="my-cell">زمان ثبت اطلاعات</th>
             </tr>
             </thead>
             <tbody>
@@ -29,6 +33,7 @@
                     <td class="my-cell">{{ station.rainfall_3h }}</td>
                     <td class="my-cell">{{ station.recent_rainfall }}</td>
                     <td class="my-cell">{{ station.year_rainfall }}</td>
+                    <td class="my-cell">{{ station.last_rainfall_date_time | show_jalali_date_hover }}</td>
                 </tr>
             {% endfor %}
             </tbody>

@@ -1,0 +1,52 @@
+{% extends 'shared/_layout.html' %}
+
+{% load static %}
+{% load jalali_tags %}
+{% load poll_extras %}
+
+
+{% block title %}
+    درخواست مرخصی
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-5 table-responsive">
+        <head>
+            <title class="text-center">لیست مرخصی ها از {{ past_year_jalali }}</title>
+        </head>
+        <body>
+        <h3 class="text-center">لیست مرخصی ها از {{ past_year_jalali }}</h3>
+        <table class="leave-table">
+            <thead>
+            <tr>
+                <th>نام کارمند</th>
+                <th>نوع مرخصی</th>
+                <th>تعداد روز</th>
+                <th>تاریخ شروع</th>
+                <th>تاریخ پایان</th>
+                <th class="description">توضیحات</th>
+                <th>فایل پیوست</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for leave in leaves %}
+                <tr>
+                    <td class="my-cell">{{ leave.employee.user.get_full_name }}</td>
+                    <td>{{ leave.leave_type }}</td>
+                    <td>{{ leave.leave_days }}</td>
+                    <td>{{ leave.start_date|show_jalali_date }}</td>
+                    <td>{{ leave.end_date|show_jalali_date }}</td>
+                    <td>{{ leave.description }}</td>
+                    <td>{% if leave.attachment %}
+                        <a href="{{ leave.attachment.url }}">دانلود</a>
+                    {% else %}
+                        -
+                    {% endif %}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </body>
+        <hr>
+    </div>
+{% endblock %}

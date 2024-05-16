@@ -217,6 +217,36 @@ table td {
     margin-top: 20px;
 }
 
+.my-table th:nth-child(1),
+.my-table td:nth-child(1) {
+    width: 5%; /* اندازه ستون ردیف */
+}
+
+.my-table th:nth-child(2),
+.my-table td:nth-child(2) {
+    width: 20%; /* اندازه ستون نام ایستگاه */
+}
+
+.my-table th:nth-child(3),
+.my-table td:nth-child(3) {
+    width: 15%; /* اندازه ستون بارندگی 3 ساعته */
+}
+
+.my-table th:nth-child(4),
+.my-table td:nth-child(4) {
+    width: 20%; /* اندازه ستون بارندگی سامانه اخیر */
+}
+
+.my-table th:nth-child(5),
+.my-table td:nth-child(5) {
+    width: 20%; /* اندازه ستون بارندگی سال زراعی تا کنون */
+}
+
+.my-table th:nth-child(6),
+.my-table td:nth-child(6) {
+    width: 20%; /* اندازه ستون زمان ثبت اطلاعات */
+}
+
 .my-table th {
     border: 1px solid #ddd;
     padding: 8px;
@@ -337,7 +367,7 @@ table td {
     border: none;
     border-radius: 10px;
     background-color: #f8f8f8;
-    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
     z-index: 1000;
 }
 
@@ -358,3 +388,37 @@ table td {
 /*    color: #fff;*/
 /*    background-color: #007bff;*/
 /*}*/
+
+.leave-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    table-layout: fixed;
+}
+
+.leave-table th, .leave-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+    word-wrap: break-word; /* این خط برای شکستن کلمات طولانی در سلول‌ها است */
+}
+
+.leave-table th {
+    background-color: #f2f2f2;
+    color: #333;
+}
+
+.leave-table .description {
+    max-width: 600px;
+    white-space: normal; /* تغییر مقدار white-space برای نمایش متن به طور طبیعی */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* استایل برای ریسپانسیو بودن */
+@media screen and (max-width: 600px) {
+    .leave-table th, .leave-table td {
+        padding: 6px;
+        font-size: 12px; /* تغییر اندازه قلم برای جدول در اندازه‌های کوچکتر */
+    }
+}

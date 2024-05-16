@@ -1,14 +1,20 @@
+import datetime
+
+from jalali_date.templatetags.jalali_tags import to_jalali
+from .models import Leave
+import datetime
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
+from jalali_date import datetime2jalali
 from .models import User
-from account_module.forms import RegisterForm, LoginForm, ForgotPasswordForm, ResetPasswordForm
+from account_module.forms import RegisterForm, LoginForm, ForgotPasswordForm, ResetPasswordForm, LeaveForm
 from django.utils.crypto import get_random_string
 from django.http import Http404, HttpRequest
 from django.contrib.auth import login, logout
 from utils.email_service import send_email
-
+from jalali_date import date2jalali
 
 # Create your views here.
 
@@ -161,4 +167,42 @@ class LogoutView(View):
     def get(self, request):
         logout(request)
         return redirect(reverse('login_page'))
+
+
+def leave_request(request):
+    jalali_join = datetime2jalali(request.user.date_joined).strftime('%y/%m/%d _ %H:%M:%S')
+    user_workplace_code = request.user.employee.workplace_code if request.user.is_authenticated else None
+    if request.method == 'POST':
+        form = LeaveForm(request.POST, request.FILES, user_workplace_code=user_workplace_code)
+        if form.is_valid():
+            form.save()
+            return redirect('all_leaves')  # Redirect to a success page
+    else:
+        form = LeaveForm(user_workplace_code=user_workplace_code)
+    return render(request, 'account_module/leave_request.html', {'form': form})
+
+
+
+
+def all_leaves(request):
+    today = datetime.date.today()
+    past_year_jalali = date2jalali(today - datetime.timedelta(days=365)).strftime('%d-%m-%Y')
+    past_year = today - datetime.timedelta(days=365)
+    user_code_melli = request.user.employee.code_melli if request.user.is_authenticated else None
+    valid_list = ['2559110393']
+    # leaves = Leave.objects.filter(start_date__gte=past_year).order_by('-start_date')
+    if request.user.is_authenticated and user_code_melli in valid_list:
+        # اگر کاربر وارد شده و در لیست خاصی قرار دارد
+        leaves = Leave.objects.filter(start_date__gte=past_year).order_by('-start_date')
+    else:
+        user_workplace_code = request.user.employee.workplace_code if request.user.is_authenticated else None
+        # اگر کاربر دیگری باشد یا در لیست خاصی نباشد
+        leaves = Leave.objects.filter(start_date__gte=past_year, employee__workplace_code=user_workplace_code).order_by(
+            '-start_date')
+
+    context = {
+        'leaves': leaves,
+        'past_year_jalali': past_year_jalali,
+    }
+    return render(request, 'account_module/all_leaves.html', context)
 

@@ -1,0 +1,114 @@
+{% extends 'shared/_layout.html' %}
+{% load static %}
+{% load jalali_tags %}
+{% load poll_extras %}
+
+
+{% block title %}
+    درخواست مرخصی
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+    <h3 class="text-center">فرم درخواست مرخصی</h3>
+        <hr>
+        <div class="row">
+            <div class="col-md-4">
+
+                </div>
+            <div class="col-md-8 pull-right">
+                <form enctype="multipart/form-data" action="{% url 'leave_request' %}" method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="id_description">توضیحات</label>
+                                {{ form.description }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="id_employee">کارمند</label>
+                                {{ form.employee }}
+                            </div>
+                            <div class="form-group">
+                                <label for="id_leave_type">نوع مرخصی</label>
+                                {{ form.leave_type }}
+                            </div>
+                            <div class="form-group">
+                                <label for="id_leave_days">تعداد روزهای مرخصی</label>
+                                {{ form.leave_days }}
+                            </div>
+                            <div class="form-group">
+                                <label for="id_start_date">تاریخ شروع</label>
+                                {{ form.start_date }}
+                            </div>
+                            <div class="form-group">
+                                <label for="id_end_date">تاریخ پایان</label>
+                                {{ form.end_date }}
+                            </div>
+                            <div class="form-group">
+                                <label for="id_attachment">پیوست</label>
+                                {{ form.attachment }}
+                            </div>
+                            <button type="submit" class="btn btn-success">ثبت درخواست</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <link rel="stylesheet" href="/static/css/jquery-ui.min.css">
+{% endblock %}
+
+
+{#{% extends 'shared/_layout.html' %}#}
+{#{% load static %}#}
+{#{% load jalali_tags %}#}
+{#{% load poll_extras %}#}
+{##}
+{##}
+{#{% block title %}#}
+{#    درخواست مرخصی#}
+{#{% endblock %}#}
+{##}
+{#{% block content %}#}
+{#    <div class="container">#}
+{#        <div class="row">#}
+{#            <div class="col-md-4">#}
+{#                <!-- اینجا می‌توانید بخشی از پنل کاربری را قرار دهید -->#}
+{#            </div>#}
+{#            <div class="col-md-4 pull-right">#}
+{#                <form enctype="multipart/form-data" action="{% url 'leave_request' %}" method="post">#}
+{#                    {% csrf_token %}#}
+{#                    <div class="form-group">#}
+{#                        <label for="id_employee">کارمند</label>#}
+{#                        {{ form.employee }}#}
+{#                    </div>#}
+{#                    <div class="form-group">#}
+{#                        <label for="id_leave_type">نوع مرخصی</label>#}
+{#                        {{ form.leave_type }}#}
+{#                    </div>#}
+{#                    <div class="form-group">#}
+{#                        <label for="id_leave_days">تعداد روزهای مرخصی</label>#}
+{#                        {{ form.leave_days }}#}
+{#                    </div>#}
+{#                    <div class="form-group">#}
+{#                        <label for="id_start_date">تاریخ شروع</label>#}
+{#                        {{ form.start_date }}#}
+{#                    </div>#}
+{#                    <div class="form-group">#}
+{#                        <label for="id_end_date">تاریخ پایان</label>#}
+{#                        {{ form.end_date }}#}
+{#                    </div>#}
+{#                    <div class="form-group">#}
+{#                        <label for="id_attachment">پیوست</label>#}
+{#                        {{ form.attachment }}#}
+{#                    </div>#}
+{#                    <button type="submit" class="btn btn-success">ثبت درخواست</button>#}
+{#                </form>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#    <link rel="stylesheet" href="/static/css/jquery-ui.min.css">#}
+{#{% endblock %}#}

@@ -1,5 +1,10 @@
 from django import forms
 from django.core import validators
+from django.forms import DateInput
+from jalali_date.fields import JalaliDateField
+from jalali_date.widgets import AdminJalaliDateWidget
+
+from account_module.models import Leave, Employee
 
 
 class RegisterForm(forms.Form):
@@ -86,6 +91,36 @@ class ResetPasswordForm(forms.Form):
     )
 
 
+class LeaveForm(forms.ModelForm):
+    employee = forms.ModelChoiceField(queryset=None, label="کارمند", widget=forms.Select(attrs={'class': 'text-center form-control'}))
+    start_date = JalaliDateField(widget=AdminJalaliDateWidget(attrs={'class': 'text-center form-control jalali_date-date'}))
+    end_date = JalaliDateField(widget=AdminJalaliDateWidget(attrs={'class': 'text-center form-control jalali_date-date'}))
+    leave_type = forms.ChoiceField(choices=(('استحقاقی', 'استحقاقی'), ('استعلاجی', 'استعلاجی')), label='نوع مرخصی', widget=forms.Select(attrs={'class': 'text-center form-control'}))
+    description = forms.CharField(label="توضیحات", required=False, widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 15}), max_length=100)
+    def __init__(self, *args, user_workplace_code=None, **kwargs):
+        super(LeaveForm, self).__init__(*args, **kwargs)
+        # self.fields['start_date'] = JalaliDateField(
+        #                                       widget=AdminJalaliDateWidget  # optional, to use default datepicker
+        #                                       )
+        # you can added a "class" to this field for use your datepicker!
+        # self.fields['start_date'].widget.attrs.update({'class': 'jalali_date-date'})
+        if user_workplace_code:
+            self.fields['employee'].queryset = Employee.objects.filter(workplace_code=user_workplace_code)
 
-
-
+    class Meta:
+        model = Leave
+        fields = ['employee', 'leave_type', 'leave_days', 'start_date', 'end_date', 'attachment', 'description']
+        widgets = {
+            'leave_days': forms.NumberInput(attrs={'class': 'text-center form-control'}),
+            'attachment': forms.FileInput(attrs={'class': 'text-center form-control'}),
+            # 'description': forms.Textarea(attrs={'class': 'form-control', 'rows':6}),
+            # Consistent widget and styling
+        }
+        labels = {
+            'employee': 'کارمند',
+            'leave_days': 'تعداد روزهای مرخصی',
+            'start_date': 'تاریخ شروع',
+            'end_date': 'تاریخ پایان',
+            'attachment': 'پیوست',
+            'description': 'توضیحات',
+        }

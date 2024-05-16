@@ -8,4 +8,6 @@ urlpatterns = [
     path('forget-pass/', views.ForgetPasswordView.as_view(), name='forget_password_page'),
     path('reset-pass/<active_code>', views.ResetPasswordView.as_view(), name='reset_password_page'),
     path('activate-account/<email_active_user>', views.ActivateAccountView.as_view(), name='activate_account'),
+    path('leave-request', views.leave_request, name='leave_request'),
+    path('all-leave', views.all_leaves, name='all_leaves'),
 ]

@@ -28,14 +28,6 @@
     <div class="header-middle"><!--header-middle-->
         <div class="container">
             <div class="row">
-                <!-- <div class="col-sm-4 header-middle-menu">
-                    <div class="shop-menu pull-left">
-                        <ul class="nav navbar-nav">
-                            <li><a href="checkout.html"><i class="fa fa-crosshairs"></i> پرداخت</a></li>
-                        </ul>
-                    </div>
-                </div> -->
-
                 <div class="col-sm-4" style="text-align: left;">
                     <div class="logo">
                         <a href="index.html">
@@ -132,8 +124,9 @@
                                         <li><a href="{% url 'table_update_rainfall' %}" class=
                                                 "{% if request.resolver_match.url_name == 'table_update_rainfall' %}active{% endif %}">ثبت
                                             بارش 3 ساعته و اخیر</a></li>
-                                        <li><a href="#">ثبت اضافه کاری</a></li>
-                                        <li><a href="#">ثبت مرخصی</a></li>
+                                        <li><a href="#">ثبت کارکرد ماهانه</a></li>
+                                        <li><a href="{% url 'leave_request' %}" class="{% if request.resolver_match.url_name == 'leave_request' %}active{% endif %}">درخواست
+                                            مرخصی</a></li>
                                     </ul>
                                 </li>
                             {% endif %}
@@ -141,13 +134,14 @@
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">آمار و اطلاعات<b
                                         class="caret"></b></a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="{% url 'stations_table_3h_recent_rainfall' %}">بارش 3 ساعته و اخیر</a></li>
+                                    <li><a href="{% url 'stations_table_3h_recent_rainfall' %}">بارش 3 ساعته و اخیر</a>
+                                    </li>
                                     {% if request.user.employee %}
                                         <li><a href="#">اضافه کاری</a></li>
                                     {% endif %}
-                                {% if request.user.employee %}
-                                    <li><a href="#">مرخصی</a></li>
-                                {% endif %}
+                                    {% if request.user.employee %}
+                                        <li><a href="{% url 'all_leaves' %}">مرخصی ها</a></li>
+                                    {% endif %}
                                 </ul>
                             </li>
 

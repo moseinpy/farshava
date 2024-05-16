@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from jalali_date import date2jalali
 
-# Create your models here.
 
 class User(AbstractUser):
     avatar = models.ImageField(upload_to='images/profile', verbose_name="تصویر آواتار", null=True, blank=True)
@@ -34,3 +34,26 @@ class Employee(models.Model):
     class Meta:
         verbose_name = "کارمند"
         verbose_name_plural = "کارمندان"
+
+
+class Leave(models.Model):
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name="کارمند")
+    leave_type = models.CharField(max_length=100, verbose_name="نوع مرخصی")
+    leave_days = models.IntegerField(verbose_name="تعداد روز مرخصی")
+    start_date = models.DateField(verbose_name="تاریخ شروع مرخصی")
+    end_date = models.DateField(verbose_name="تاریخ پایان مرخصی")
+    attachment = models.FileField(upload_to='attachments/', verbose_name="آپلود فایل")
+    description = models.TextField(verbose_name="توضیحات", blank=True)
+
+    def get_jalali_start_date(self):
+        return date2jalali(self.start_date)
+
+    def get_jalali_end_date(self):
+        return date2jalali(self.end_date)
+
+    def __str__(self):
+        return f"{self.employee.user.get_full_name()} - {self.leave_type}"
+
+    class Meta:
+        verbose_name = "مرخصی"
+        verbose_name_plural = "مرخصی‌ها"

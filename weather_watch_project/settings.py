@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 import os
 import dj_database_url
+import locale
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -121,27 +123,27 @@ LOGIN_URL = '/login/'
 #     }
 # }
 
-# DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql',
-#        'NAME': 'postgres',
-#        'USER': 'postgres',
-#        'PASSWORD': 'Ma13561227',
-#        'HOST': 'localhost',
-#        'PORT': '5432',
-#    }
-# }
-#
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "postgres",
-        "USER": "root",
-        "PASSWORD": "MkJxFnccgV1zp2pdixmw4ncx",
-        "HOST": "postgres-db",
-        "PORT": "5432",
-    }
+   'default': {
+       'ENGINE': 'django.db.backends.postgresql',
+       'NAME': 'postgres',
+       'USER': 'postgres',
+       'PASSWORD': 'Ma13561227',
+       'HOST': 'localhost',
+       'PORT': '5432',
+   }
 }
+#
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "postgres",
+#         "USER": "root",
+#         "PASSWORD": "MkJxFnccgV1zp2pdixmw4ncx",
+#         "HOST": "postgres-db",
+#         "PORT": "5432",
+#     }
+# }
 
 # DATABASES = {
 #     'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
@@ -208,11 +210,15 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
 JALALI_DATE_DEFAULTS = {
-    'Strftime': {
+   # if change it to true then all dates of the list_display will convert to the Jalali.
+   'LIST_DISPLAY_AUTO_CONVERT': False,
+   'Strftime': {
         'date': '%y/%m/%d',
         'datetime': '%H:%M:%S _ %y/%m/%d',
     },
+
     'Static': {
         'js': [
             # loading datepicker
@@ -231,3 +237,13 @@ JALALI_DATE_DEFAULTS = {
         }
     },
 }
+
+
+locale.setlocale(locale.LC_ALL, "Persian_Iran.UTF-8")
+
+# # settings.py
+# JALALI_DATE_WIDGET = {
+#     'widgets': {
+#         'JalaliDate': 'jalali_date.widgets.JalaliDateWidget',
+#     },
+# }
