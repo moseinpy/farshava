@@ -1,0 +1,15 @@
+{% extends 'shared/_layout.html' %}
+
+{% block title %}
+    هشدار: اطلاعات ناقص
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h2>اطلاعات بارشی ایستگاه‌ها ناقص است</h2>
+        <p>{{ messages }}</p>
+        <div class="form-container mt-3">
+            <a href="{% url 'station_module:table_update_24h_rainfall' %}" class="btn-back">بازگشت به صفحه قبلی</a>
+        </div>
+    </div>
+{% endblock %}

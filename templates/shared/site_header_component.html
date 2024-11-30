@@ -106,9 +106,15 @@
                                     مقالات
                                 </a>
                             </li>
+                            {#                            <li>#}
+                            {#                                <a href="{% url 'recent-rain-gauge' %}"#}
+                            {#                                   class="{% if request.resolver_match.url_name == 'recent-rain-gauge' %}active{% endif %}">#}
+                            {#                                    بارش اخیر#}
+                            {#                                </a>#}
+                            {#                            </li>#}
                             <li>
-                                <a href="{% url 'recent-rain-gauge' %}"
-                                   class="{% if request.resolver_match.url_name == 'recent-rain-gauge' %}active{% endif %}">
+                                <a href="{% url 'rainfall-24h' %}"
+                                   class="{% if request.resolver_match.url_name == 'rainfall-24h' %}active{% endif %}">
                                     بارش اخیر
                                 </a>
                             </li>
@@ -117,16 +123,27 @@
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">ثبت و بروزرسانی<b
                                             class="caret"></b></a>
                                     <ul class="dropdown-menu">
-                                        <li><a href="{% url 'rain-gauge-table' %}"
-                                               class="{% if request.resolver_match.url_name == 'rain-gauge-table' %}active{% endif %}">
+{#                                        <li><a href="{% url 'rain-gauge-table' %}"#}
+{#                                               class="{% if request.resolver_match.url_name == 'rain-gauge-table' %}active{% endif %}">#}
+{#                                            ثبت بارندگی اخیر#}
+{#                                        </a></li>#}
+                                        <li><a href="{% url 'table-update-24h-rainfall' %}"
+                                               class="{% if request.resolver_match.url_name == 'table-update-24h-rainfall' %}active{% endif %}">
                                             ثبت بارندگی اخیر
                                         </a></li>
-                                        <li><a href="{% url 'table_update_rainfall' %}" class=
-                                                "{% if request.resolver_match.url_name == 'table_update_rainfall' %}active{% endif %}">ثبت
+                                        <li><a href="{% url 'table_update_rainfall' %}"
+                                               class="{% if request.resolver_match.url_name == 'table_update_rainfall' %}active{% endif %}">ثبت
                                             بارش 3 ساعته و اخیر</a></li>
-                                        <li><a href="#">ثبت کارکرد ماهانه</a></li>
-                                        <li><a href="{% url 'leave_request' %}" class="{% if request.resolver_match.url_name == 'leave_request' %}active{% endif %}">درخواست
-                                            مرخصی</a></li>
+                                        {% if request.user.employee %}
+                                            <li><a href="{% url 'table_work_log' %}"
+                                                   class="{% if request.resolver_match.url_name == 'table_work_log' %}active{% endif %}">ثبت
+                                                کارکرد ماهانه</a></li>
+                                        {% endif %}
+                                        {% if request.user.employee %}
+                                            <li><a href="{% url 'leave_request' %}"
+                                                   class="{% if request.resolver_match.url_name == 'leave_request' %}active{% endif %}">درخواست
+                                                مرخصی</a></li>
+                                        {% endif %}
                                     </ul>
                                 </li>
                             {% endif %}
@@ -137,7 +154,7 @@
                                     <li><a href="{% url 'stations_table_3h_recent_rainfall' %}">بارش 3 ساعته و اخیر</a>
                                     </li>
                                     {% if request.user.employee %}
-                                        <li><a href="#">اضافه کاری</a></li>
+                                        <li><a href="{% url 'all_work_logs' %}">کارکرد ماهانه</a></li>
                                     {% endif %}
                                     {% if request.user.employee %}
                                         <li><a href="{% url 'all_leaves' %}">مرخصی ها</a></li>

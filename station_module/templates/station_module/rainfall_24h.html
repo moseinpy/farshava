@@ -1,0 +1,52 @@
+{% extends 'shared/_layout.html' %}
+{% load django_tables2 %}
+{% load poll_extras %}
+
+{% block title %}
+    بارندگی در استان
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h3 class="text-center">بارندگی ایستگاه‌های استان ({{ date_jalali }})</h3>
+        <p class="lead text-center">
+            این جدول میزان بارندگی ایستگاه‌های استان را نشان می‌دهند.  داده‌ها از شبکه مراکز بارانسنجی جمع آوری شده است.
+        </p>
+
+        <!-- Table for displaying rainfall data -->
+        {% render_table table %}
+
+        {% if request.user.is_authenticated %}
+            <div class="download-buttons mt-3">
+                <a href="{% url 'rainfall_24h_export_xls' %}?rainfall_type={{ rainfall_type }}" class="btn btn-down">دانلود
+                    اکسل</a>
+                {% if request.user.username in allowed_users %}
+                    <a href="{% url 'rainfall_24h_export_lat_long_xls' %}?rainfall_type={{ rainfall_type }}"
+                       class="btn btn-down">دانلود اکسل با طول و عرض</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+
+    <hr>
+
+    <!-- Map for displaying rainfall -->
+    <div class="container mt-5">
+        <h3 class="text-center">نقشه بارندگی ایستگاه‌های استان. با انتخاب بارش 24 ساعته یا بارش اخیر یا بارش سال زراعی نقشه بارش در زیر نمایش داده می شود.</h3>
+        <!-- Buttons for selecting rainfall type -->
+        <div class="text-center mb-3">
+            <a href="?rainfall_type=daily"
+               class="btn btn-select-date {% if rainfall_type == 'daily' %}active{% endif %}">بارش 24 ساعته</a>
+            <a href="?rainfall_type=recent"
+               class="btn btn-select-date {% if rainfall_type == 'recent' %}active{% endif %}">بارش اخیر (در 4 روز
+                اخیر)</a>
+            <a href="?rainfall_type=crop" class="btn btn-select-date {% if rainfall_type == 'crop' %}active{% endif %}">بارش
+                سال زراعی</a>
+        </div>
+        <div id="map" style="height: 600px; margin-top: 20px;">
+            {{ map_html|safe }}
+        </div>
+    </div>
+
+    <hr>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends 'shared/_layout.html' %}
+
+{% block title %}
+    ثبت بارش 24 ساعته و سال زراعی
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert-rainfall {% if message.tags %}alert-{{ message.tags }}{% endif %}
+                        {% if message.tags == 'success' %}blinking-text{% elif message.tags == 'error' %}grow-shrink-text{% else %}color-change-text{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+
+            </div>
+        {% endif %}
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-center">فرم ثبت بارندگی ایستگاه‌ها</h3>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="table-responsive">
+                        <table class="update-table-rainfall">
+                            <thead>
+                            <tr>
+                                <th> ایستگاه</th>
+                                <th> 24 ساعت گذشته</th>
+                                <th> اخیر</th>
+                                <th> سال زراعی</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for station in stations %}
+                                <tr>
+                                    <td>{{ station.title }} ({{ station.code }})</td>
+                                    <!-- بارش 24 ساعته -->
+                                    <td>
+                                        <input type="number" id="daily-rainfall" class="input-rainfall" min="0"
+                                               max="350">
+                                        <span id="daily-error" style="color: red; display: none;">مقدار بارش 24 ساعته نمی‌تواند بیشتر از 350 میلی‌متر باشد.</span>
+                                    </td>
+                                    <!-- بارش اخیر -->
+                                    <td>
+                                        <input type="number" id="recent-rainfall" class="input-rainfall" min="0"
+                                               max="800">
+                                        <span id="recent-error" style="color: red; display: none;">مقدار بارش اخیر نمی‌تواند بیشتر از 800 میلی‌متر باشد.</span>
+                                    </td>
+                                    <!-- بارش زراعی -->
+                                    <td>
+                                        <input type="number" id="agricultural-rainfall" class="input-rainfall" min="0"
+                                               max="1500">
+                                        <span id="agricultural-error" style="color: red; display: none;">مقدار بارش زراعی نمی‌تواند بیشتر از 1500 میلی‌متر باشد.</span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-center mt-3">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-save ml-2"></i>
+                            ذخیره اطلاعات
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

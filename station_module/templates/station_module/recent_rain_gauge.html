@@ -2,27 +2,33 @@
 {% load poll_extras %}
 {% load django_tables2 %}
 
-
 {% block title %}
     بارندگی اخیر در استان
 {% endblock %}
 
 {% block content %}
     <div class="container mt-5">
-        <h3 class="text-center">بارندگی سامنه اخیر در استان ({{ today | show_jalali_date }})</h3>
+        <h3 class="text-center">بارندگی سامانه اخیر در استان ({{ today | show_jalali_date }})</h3>
 
         <p class="lead text-center">
-            این جدول نشان دهنده میزان بارندگی سامانه اخیر در استان است. داده ها از شبکه مراکز بارانسنجی گرفته شده اند.
-        </p>
+ این جدول میزان بارندگی سامانه اخیر در استان را نشان می‌دهد. شما می‌توانید بازه زمانی بارندگی را از بین گرینه های زیر انتخاب کنید. داده‌ها از شبکه مراکز بارانسنجی گرفته شده‌اند.        </p>
+
+        <!-- Buttons for selecting rainfall period -->
+        <div class="text-center mb-3">
+            <a href="?period=24" class="btn btn-select-date">ثبت در 24 ساعت اخیر</a>
+            <a href="?period=48" class="btn btn-select-date">ثبت در 48 ساعت اخیر</a>
+            <a href="?period=72" class="btn btn-select-date">ثبت در 72 ساعت اخیر</a>
+            <a href="?period=96" class="btn btn-select-date">ثبت در 96 ساعت اخیر</a>
+        </div>
 
         {% render_table table %}
 
     </div>
     {% if request.user.is_authenticated %}
         <div class="download-buttons">
-            <a href="{% url 'rain_gauges_export_xls' %}" class="btn btn-down">دانلود اکسل</a>
+            <a href="{% url 'rain_gauges_export_xls' %}?period={{ period }}" class="btn btn-down">دانلود اکسل</a>
             {% if request.user.username in allowed_users %}
-                <a href="{% url 'rain_gauges_export_lat_long_xls' %}" class="btn btn-down">دانلود اکسل با طول و عرض</a>
+                <a href="{% url 'rain_gauges_export_lat_long_xls' %}?period={{ period }}" class="btn btn-down">دانلود اکسل با طول و عرض</a>
             {% endif %}
         </div>
     {% endif %}
@@ -33,5 +39,3 @@
     </div>
     <hr>
 {% endblock %}
-
-

@@ -1,0 +1,75 @@
+{% extends 'shared/_layout.html' %}
+
+{% block title %}
+    تمامی کارکردهای کارکنان
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <form method="get" class="form-inline mb-4">
+            <div class="form-group">
+                <label for="id_year">سال:</label>
+                {{ form.year }}
+            </div>
+            <div class="form-group ml-3">
+                <label for="id_month">ماه:</label>
+                {{ form.month }}
+            </div>
+            <button type="submit" class="btn btn-filter ml-3">فیلتر</button>
+        </form>
+
+        <div class="table-responsive">
+            <table class="worklog-table">
+                <thead>
+                    <tr>
+                        <th class="employee-column">نام کارمند</th>
+                        <th>سال</th>
+                        <th>ماه</th>
+                        <th>شیفت روز</th>
+                        <th>شیفت شب</th>
+                        <th>مرخصی</th>
+                        <th>تعداد عدم مخابره</th>
+                        <th>تعداد تاخیر و تعجیل</th>
+                        <th>تعداد اشتباه</th>
+                        <th>همکاری در امور</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for worklog in worklogs %}
+                        <tr>
+                            <td>{{ worklog.employee.user.get_full_name }}</td>
+                            <td>{{ worklog.year }}</td>
+                            <td>{{ worklog.month }}</td>
+                            <td>{{ worklog.day_shifts }}</td>
+                            <td>{{ worklog.night_shifts }}</td>
+                            <td>{{ worklog.leaves }}</td>
+                            <td>{{ worklog.nill_reports }}</td>
+                            <td>{{ worklog.late_early_reports }}</td>
+                            <td>{{ worklog.incorrect_reports }}</td>
+                            <td>{{ worklog.station_collaboration }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            {% if is_paginated %}
+                <div class="pagination">
+                    <span class="step-links">
+                        {% if page_obj.has_previous %}
+                            <a href="?page=1">&laquo; ابتدا</a>
+                            <a href="?page={{ page_obj.previous_page_number }}">قبلی</a>
+                        {% endif %}
+                        <span class="current">
+                            صفحه {{ page_obj.number }} از {{ page_obj.paginator.num_pages }}
+                        </span>
+                        {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}">بعدی</a>
+                            <a href="?page={{ page_obj.paginator.num_pages }}">آخر &raquo;</a>
+                        {% endif %}
+                    </span>
+                </div>
+            {% endif %}
+        </div>
+        <hr>
+    </div>
+{% endblock %}

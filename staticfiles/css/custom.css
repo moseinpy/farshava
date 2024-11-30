@@ -46,6 +46,26 @@ table td {
     max-width: 300px;
 }
 
+.column-row-number {
+    width: 5%;  /* عرض ستون ردیف */
+}
+
+.column-city {
+    width: 20%;  /* عرض ستون شهرستان */
+}
+
+.column-title {
+    width: 25%;  /* عرض ستون نام ایستگاه */
+}
+
+.column-recent-rainfall {
+    width: 15%;  /* عرض ستون بارندگی اخیر */
+}
+
+.column-last-rainfall-date-time {
+    width: 20%;  /* عرض ستون تاریخ و ساعت ثبت بارش */
+}
+
 .download-buttons {
     text-align: center;
 }
@@ -63,13 +83,34 @@ table td {
 
 .btn-down {
     background-color: #ff8000;
-
 }
+
+.btn-select-date {
+    background-color: #ffcc00;
+    padding: 5px 5px;
+    border-radius: 15px;
+    color: black;
+    text-decoration: none;
+    margin: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-select-date:hover {
+    background-color: #00a6ff;
+}
+
+.btn-selected {
+    background-color: #00a6ff; /* رنگ متفاوت برای دکمه انتخاب شده */
+    color: black; /* رنگ متن برای دکمه انتخاب شده */
+}
+
 
 .btn-down:hover {
     background-color: #ffc400;
-
 }
+
 
 .my-container {
     width: 100%;
@@ -110,17 +151,6 @@ table td {
     text-align: center;
 }
 
-/*.single-blog-post .show_large_image_box {
-    text-align: center;
-    position: absolute;
-    top: 24%;
-    left: 90%;
-    transform: translate(-50%, -50%);
-    background-color: #ff8000;
-    width: 90px;
-    height: 45px;
-    border-radius: 10px;
-}*/
 
 .font-weight-bold {
     font-family: 'BYekan', sans-serif;
@@ -175,4 +205,535 @@ table td {
     height: auto;
     /*width: 270px;*/
     /*height: 329px;*/
+}
+
+.rtl {
+    direction: rtl;
+    text-align: right;
+}
+
+.station-title {
+    background-color: #f8f9fa;
+    text-align: -webkit-center;
+    font-weight: bolder;
+    font-size: 24px;
+    color: orange;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+.form-row {
+    display: flex;
+    text-align: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    color: #000dff;
+}
+
+.form-group {
+    margin: 0 10px;
+}
+
+.separator {
+    border-top: 2px solid #010205;
+    margin: 20px 0;
+}
+
+.my-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+
+.my-table th:nth-child(1),
+.my-table td:nth-child(1) {
+    width: 5%; /* اندازه ستون ردیف */
+}
+
+.my-table th:nth-child(3),
+.my-table td:nth-child(3) {
+    width: 15%; /* اندازه ستون بارندگی 3 ساعته */
+}
+
+.my-table th:nth-child(4),
+.my-table td:nth-child(4) {
+    width: 20%; /* اندازه ستون بارندگی سامانه اخیر */
+}
+
+.my-table th:nth-child(5),
+.my-table td:nth-child(5) {
+    width: 20%; /* اندازه ستون بارندگی سال زراعی تا کنون */
+}
+
+.my-table th:nth-child(6),
+.my-table td:nth-child(6) {
+    width: 20%; /* اندازه ستون زمان ثبت اطلاعات */
+}
+
+.my-table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.my-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.my-table th {
+    background-color: #f2f2f2;
+    color: #333;
+}
+
+.my-cell {
+    font-weight: bold;
+    text-align: justify;
+    font-size: small;
+}
+
+.station-row:hover {
+    background-color: #f5f5f5;
+}
+
+.input-rainfall {
+    width: 100%;
+    height: 100%;
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.input-rainfall::-webkit-inner-spin-button,
+.input-rainfall::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.btn-save {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-save {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    /* اضافه کردن این خط برای مرکز قرار دادن دکمه */
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.btn-save:hover {
+    background-color: #45a049;
+}
+
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    min-width: 200px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    border-radius: 10px;
+    background-color: #f8f8f8;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    z-index: 1000;
+}
+
+/* نمایش منوهای تو در تو هنگام قرار گرفتن موس بر روی آن‌ها */
+.dropdown-hover:hover .dropdown-menu {
+    display: block;
+}
+
+
+.leave-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    table-layout: fixed;
+}
+
+.leave-table th, .leave-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+    word-wrap: break-word; /* این خط برای شکستن کلمات طولانی در سلول‌ها است */
+}
+
+.leave-table th {
+    background-color: #f2f2f2;
+    color: #333;
+}
+
+.leave-table .description {
+    max-width: 600px;
+    white-space: normal; /* تغییر مقدار white-space برای نمایش متن به طور طبیعی */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* استایل برای ریسپانسیو بودن */
+@media screen and (max-width: 600px) {
+    .leave-table th, .leave-table td {
+        padding: 6px;
+        font-size: 12px; /* تغییر اندازه قلم برای جدول در اندازه‌های کوچکتر */
+    }
+}
+
+.worklog-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0px;
+    table-layout: fixed;
+    font-size: 14px; /* اندازه فونت برای تمام جدول */
+}
+
+.worklog-table th,
+.worklog-table td {
+    border: 1px solid #ffd700;
+    padding: 3px; /* کاهش پدینگ برای کم کردن ارتفاع سطرها */
+    text-align: center;
+    word-wrap: break-word; /* شکستن کلمات طولانی در سلول‌ها */
+    white-space: nowrap; /* جلوگیری از شکستن خودکار متن */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+
+.worklog-table th {
+    background-color: #cfe2f3;
+    color: #333;
+}
+
+/* استایل برای ریسپانسیو بودن */
+@media screen and (max-width: 600px) {
+    .worklog-table th,
+    .worklog-table td {
+        padding: 6px; /* پدینگ کوچک‌تر برای اندازه‌های کوچکتر */
+        font-size: 12px; /* اندازه فونت کوچک‌تر برای اندازه‌های کوچکتر */
+    }
+}
+
+.worklog-table th.employee-column {
+    width: 190px; /* عرض ستون نام کارمند */
+}
+
+.worklog-table th.month-column {
+    width: 110px; /* عرض ستون ماه */
+}
+
+.worklog-table th.year-column {
+    width: 80px; /* عرض ستون ماه */
+}
+
+.worklog-table th.late-early-column {
+    width: 110px; /* عرض ستون ماه */
+}
+
+.worklog-table th.edit-column {
+    width: 60px; /* عرض ستون ماه */
+}
+
+
+
+.worklog-table input,
+.worklog-table select {
+    width: 100%;
+    text-align: center;
+    font-size: 14px; /* اندازه فونت برای input و select */
+    font-weight: bold; /* تنظیم فونت ضخیم برای سلول‌های داده */
+}
+
+.worklog-table input {
+    font-weight: bold; /* تنظیم فونت ضخیم برای سلول‌های داده */
+}
+
+.worklog-table .edit-btn,
+.worklog-table .save-btn {
+    padding: 0px 3px;
+    font-size: 12px; /* اندازه فونت برای دکمه‌ها */
+}
+
+.btn-filter {
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px 12px;
+    margin: 20px 0;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* استایل کلی جدول */
+.update-table-rainfall {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px auto;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'IRANSans', Arial, sans-serif;
+}
+
+/* هدر جدول */
+.update-table-rainfall th {
+    background-color: #74add5; /* رنگ آبی */
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    padding: 15px;
+    font-size: 2rem;
+    border: 1px solid #ddd;
+}
+
+/* سلول‌های داده */
+.update-table-rainfall td {
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+    font-size: 1.5rem;
+}
+
+/* رنگ‌بندی ردیف‌های جدول */
+.update-table-rainfall tr:nth-child(odd) {
+    background-color: #f2f2f2;
+}
+
+.update-table-rainfall tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+/* تغییر رنگ ردیف‌ها هنگام هاور */
+.update-table-rainfall tr:hover {
+    background-color: #bfb3d1;
+}
+
+/* استایل برای ورودی‌ها */
+.update-table-rainfall input[type="number"] {
+    width: 98%;
+    padding: 7px;
+    font-size: 1.5rem;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: border-color 0.3s ease;
+}
+
+.update-table-rainfall input[type="number"]:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* دکمه ذخیره */
+.update-table-rainfall-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 4rem;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.update-table-rainfall-btn:hover {
+    background-color: #0056b3;
+}
+
+.input-rainfall:disabled {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+}
+
+.alert-rainfall {
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 5px;
+    font-family: 'IRANSans', Arial, sans-serif;
+    font-size: 20px;
+    line-height: 1.5;
+    text-align: center;
+    color: #010205;
+}
+
+.alert-rainfall:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* افکت چشمک زدن برای پیام موفقیت */
+.alert-rainfall.blinking-text {
+    font-size: 22px;
+    font-weight: bold;
+    animation: blink 1s step-start 0s infinite;
+    color: green; /* رنگ برای پیام موفقیت */
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+/* افکت بزرگ و کوچکتر شدن برای پیام خطا */
+.alert-rainfall.grow-shrink-text {
+    font-size: 18px;
+    font-weight: bold;
+    animation: growShrink 2s ease-in-out infinite;
+    color: red; /* رنگ برای پیام خطا */
+}
+
+@keyframes growShrink {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.5);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* افکت تغییر رنگ برای سایر پیام‌ها */
+.alert-rainfall.color-change-text {
+    font-size: 18px;
+    font-weight: bold;
+    animation: colorChange 2s ease-in-out infinite;
+    color: yellow; /* رنگ اولیه پیام */
+}
+
+@keyframes colorChange {
+    0% {
+        color: red;
+    }
+    25% {
+        color: blue;
+    }
+    50% {
+        color: green;
+    }
+    75% {
+        color: yellow;
+    }
+    100% {
+        color: red;
+    }
+}
+
+/* تنظیمات عمومی جدول */
+.table {
+    font-family: 'IRANSans', Arial, sans-serif; /* فونت پیشفرض */
+    font-size: 14px;
+    text-align: center;
+    margin: auto;
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 100%;
+}
+
+.table th, .table td {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    color: #343a40;
+    font-weight: bold;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* طراحی منحصر به فرد برای هر ستون */
+.unique-row-number {
+    width: 50px;
+    color: #6c757d;
+}
+
+.unique-city {
+    width: 150px;
+    color: #0056b3;
+    font-weight: bold;
+}
+
+.unique-title {
+    width: 200px;
+    color: #28a745;
+    font-weight: bold;
+}
+
+.unique-rainfall-24h {
+    width: 100px;
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.unique-recent-rainfall {
+    width: 100px;
+    color: #17a2b8;
+    font-weight: bold;
+}
+
+.unique-year-rainfall {
+    width: 120px;
+    color: #ffc107;
+    font-weight: bold;
+}
+
+.unique-last-date-time {
+    width: 200px;
+    color: #6f42c1;
+    font-weight: bold;
+}
+
+/* تنظیمات واکنش‌گرا برای موبایل */
+@media (max-width: 768px) {
+    .table {
+        font-size: 12px;
+    }
+    .table th, .table td {
+        padding: 6px 8px;
+    }
+    .unique-city, .unique-title {
+        width: auto; /* عرض خودکار در موبایل */
+    }
+    .unique-last-date-time {
+        white-space: nowrap;
+        font-size: 11px;
+    }
 }

@@ -5,5 +5,6 @@ from . import models
 admin.site.register(models.User)
 admin.site.register(models.Employee)
 admin.site.register(models.Leave)
+admin.site.register(models.WorkLog)
 
 

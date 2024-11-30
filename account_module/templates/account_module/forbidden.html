@@ -1,0 +1,17 @@
+{% extends 'shared/_layout.html' %}
+
+{% block title %}
+    دسترسی غیرمجاز
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h3 class="text-center">دسترسی غیرمجاز</h3>
+        <hr>
+        <div class="alert alert-danger text-center">
+            <p>{{ error_message }}</p>
+            <p>اگر فکر می‌کنید این یک اشتباه است، با مدیر سیستم تماس بگیرید.</p>
+            <a href="{% url 'home' %}" class="btn btn-primary">بازگشت به صفحه اصلی</a>
+        </div>
+    </div>
+{% endblock %}

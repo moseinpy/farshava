@@ -14,4 +14,8 @@ urlpatterns = [
     path('rain-gauges-export-lat-long-xls/', views.rain_gauges_export_lat_long_xls, name='rain_gauges_export_lat_long_xls'),
     path('table-update-rainfall/', views.table_update_rainfall, name='table_update_rainfall'),
     path('stations-table-3h-recent-rainfall/', views.stations_table_3h_recent_rainfall, name='stations_table_3h_recent_rainfall'),
+    path('table-update-24h-rainfall/', views.table_update_24h_rainfall, name='table-update-24h-rainfall'),
+    path('rainfall-24h/', views.rainfall_24h, name='rainfall-24h'),
+    path('rainfall_24h/export/xls/', views.rainfall_24h_export_xls, name='rainfall_24h_export_xls'),
+    path('rainfall_24h/export/lat-long/xls/', views.rainfall_24h_export_lat_long_xls, name='rainfall_24h_export_lat_long_xls'),
 ]

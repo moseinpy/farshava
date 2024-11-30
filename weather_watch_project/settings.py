@@ -133,7 +133,7 @@ DATABASES = {
        'PORT': '5432',
    }
 }
-#
+
 # DATABASES = {
 #     "default": {
 #         "ENGINE": "django.db.backends.postgresql",
@@ -239,7 +239,7 @@ JALALI_DATE_DEFAULTS = {
 }
 
 
-locale.setlocale(locale.LC_ALL, "Persian_Iran.UTF-8")
+# locale.setlocale(locale.LC_ALL, "Persian_Iran.UTF-8")
 
 # # settings.py
 # JALALI_DATE_WIDGET = {

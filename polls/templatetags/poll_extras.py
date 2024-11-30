@@ -26,3 +26,23 @@ def three_digits_currency(value: int):
 @register.simple_tag
 def multiply(quantity, price, *args, **kwargs):
     return three_digits_currency(quantity * price)
+
+
+@register.filter
+def add_class(field, css_class):
+    return field.as_widget(attrs={"class": css_class})
+
+@register.filter(name="get_color")
+def get_color(recent_rainfall):
+    if recent_rainfall < 5:
+        return 'yellow'
+    elif 5 <= recent_rainfall < 10:
+        return 'orange'
+    elif 10 <= recent_rainfall < 30:
+        return 'lightgreen'
+    elif 30 <= recent_rainfall < 50:
+        return 'green'
+    elif 50 <= recent_rainfall < 80:
+        return 'blue'
+    else:
+        return 'red'

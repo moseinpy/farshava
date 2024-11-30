@@ -1,0 +1,190 @@
+{% extends 'shared/_layout.html' %}
+
+{% block title %}
+    مدیریت کارکردها
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% if error_message %}
+            <div class="alert alert-danger text-center">
+                <p>{{ error_message }}</p>
+                <p>اگر فکر می‌کنید این یک اشتباه است، با مدیر سیستم تماس بگیرید.</p>
+                <a href="{% url 'home_page' %}" class="btn btn-primary">بازگشت به صفحه اصلی</a>
+            </div>
+        {% else %}
+            <h3 class="text-center">فرم ثبت کارکرد کارمندان</h3>
+            <hr>
+            <div class="row">
+                <div class="col-md-8 pull-right">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_year">سال</label>
+                                    {{ form.year }}
+                                    {% if form.year.errors %}
+                                        <div class="text-danger">{{ form.year.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_day_shifts">تعداد شیفت روز</label>
+                                    <input type="number" name="day_shifts" min="0" max="31" class="form-control" value="{{ form.day_shifts.value }}">
+                                    {% if form.day_shifts.errors %}
+                                        <div class="text-danger">{{ form.day_shifts.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_leaves">تعداد مرخصی</label>
+                                    <input type="number" name="leaves" min="0" max="31" class="form-control" value="{{ form.leaves.value }}">
+                                    {% if form.leaves.errors %}
+                                        <div class="text-danger">{{ form.leaves.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_late_early_reports">تعداد تاخیر و تعجیل در گزارش</label>
+                                    <input type="number" name="late_early_reports" min="0" max="300" class="form-control" value="{{ form.late_early_reports.value }}">
+                                    {% if form.late_early_reports.errors %}
+                                        <div class="text-danger">{{ form.late_early_reports.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_station_collaboration">همکاری در امور ایستگاه</label>
+                                    <input type="number" name="station_collaboration" min="-5" max="5" class="form-control" value="{{ form.station_collaboration.value }}">
+                                    {% if form.station_collaboration.errors %}
+                                        <div class="text-danger">{{ form.station_collaboration.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_employee">کارمند</label>
+                                    {{ form.employee }}
+                                    {% if form.employee.errors %}
+                                        <div class="text-danger">{{ form.employee.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_month">ماه</label>
+                                    {{ form.month }}
+                                    {% if form.month.errors %}
+                                        <div class="text-danger">{{ form.month.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_night_shifts">تعداد شیفت شب</label>
+                                    <input type="number" name="night_shifts" min="0" max="31" class="form-control" value="{{ form.night_shifts.value }}">
+                                    {% if form.night_shifts.errors %}
+                                        <div class="text-danger">{{ form.night_shifts.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_nill_reports">تعداد عدم مخابره گزارش</label>
+                                    <input type="number" name="nill_reports" min="0" max="300" class="form-control" value="{{ form.nill_reports.value }}">
+                                    {% if form.nill_reports.errors %}
+                                        <div class="text-danger">{{ form.nill_reports.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_incorrect_reports">تعداد اشتباه در گزارش</label>
+                                    <input type="number" name="incorrect_reports" min="0" max="300" class="form-control" value="{{ form.incorrect_reports.value }}">
+                                    {% if form.incorrect_reports.errors %}
+                                        <div class="text-danger">{{ form.incorrect_reports.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-save">ذخیره</button>
+                    </form>
+
+                    {% if form_errors %}
+                        <div class="alert alert-danger mt-3">
+                            <ul>
+                                {% for field, errors in form_errors.items %}
+                                    <li>{{ field }}: {{ errors|join:", " }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div>
+                <hr>
+                <h3 class="text-center">لیست کارکرد کارمندان</h3>
+                <div class="table-responsive mt-5">
+                    <table class="worklog-table">
+                        <thead>
+                            <tr>
+                                <th class="employee-column">نام کارمند</th>
+                                <th class="year-column">سال</th>
+                                <th class="month-column">ماه</th>
+                                <th>شیفت روز</th>
+                                <th>شیفت شب</th>
+                                <th>مرخصی</th>
+                                <th class="nill-column">تعداد عدم مخابره</th>
+                                <th class="late-early-column">تعداد تاخیر و تعجیل</th>
+                                <th>تعداد اشتباه</th>
+                                <th>همکاری در امور</th>
+                                <th class="edit-column">ویرایش</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for worklog in worklogs %}
+                                <tr id="row-{{ worklog.id }}">
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <td>
+                                            <select name="employee" class="form-control" readonly>
+                                                {% for employee in employees %}
+                                                    <option value="{{ employee.id }}" {% if worklog.employee.id == employee.id %}selected{% endif %}>{{ employee.user.get_full_name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="number" name="year" value="{{ worklog.year }}" class="form-control" readonly>
+                                        </td>
+                                        <td>
+                                            <select name="month" class="form-control" readonly>
+                                                {% for month in months %}
+                                                    <option value="{{ month.0 }}" {% if worklog.month == month.0 %}selected{% endif %}>{{ month.1 }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="number" name="day_shifts" value="{{ worklog.day_shifts }}" class="form-control" readonly>
+                                        </td>
+                                        <td>
+                                            <input type="number" name="night_shifts" value="{{ worklog.night_shifts }}" class="form-control" readonly>
+                                        </td>
+                                        <td>
+                                            <input type="number" name="leaves" value="{{ worklog.leaves }}" class="form-control" readonly>
+                                        </td>
+                                        <td>
+                                            <input type="number" name="nill_reports" value="{{ worklog.nill_reports }}" class="form-control" readonly>
+                                        </td>
+                                        <td>
+                                            <input type="number" name="late_early_reports" value="{{ worklog.late_early_reports }}" class="form-control" readonly>
+                                        </td>
+                                        <td>
+                                            <input type="number" name="incorrect_reports" value="{{ worklog.incorrect_reports }}" class="form-control" readonly>
+                                        </td>
+                                        <td>
+                                            <input type="number" name="station_collaboration" value="{{ worklog.station_collaboration }}" class="form-control" readonly>
+                                        </td>
+                                        <td>
+                                            <input type="hidden" name="worklog_id" value="{{ worklog.id }}">
+                                            <button type="button" class="btn btn-warning btn-sm edit-btn" onclick="makeEditable({{ worklog.id }})">ویرایش</button>
+                                            <button type="submit" name="update_worklog" class="btn btn-success btn-sm save-btn" style="display: none;">ذخیره</button>
+                                        </td>
+                                    </form>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <hr>
+{% endblock %}

@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 
+
 urlpatterns = [
     path('register/', views.RegisterView.as_view(), name='register_page'),
     path('login/', views.LoginView.as_view(), name='login_page'),
@@ -10,4 +11,6 @@ urlpatterns = [
     path('activate-account/<email_active_user>', views.ActivateAccountView.as_view(), name='activate_account'),
     path('leave-request', views.leave_request, name='leave_request'),
     path('all-leave', views.all_leaves, name='all_leaves'),
+    path('table-work-log/', views.TableWorkLogView.as_view(), name='table_work_log'),
+    path('all-work-logs/', views.AllWorkLogsView.as_view(), name='all_work_logs'),
 ]
