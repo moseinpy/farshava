@@ -133,17 +133,6 @@ LOGIN_URL = '/login/'
 #        'PORT': '5432',
 #    }
 # }
-#
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "postgres",
-        "USER": "root",
-        "PASSWORD": "MkJxFnccgV1zp2pdixmw4ncx",
-        "HOST": "postgres-db",
-        "PORT": "5432",
-    }
-}
 
 DATABASES = {
     "default": {
