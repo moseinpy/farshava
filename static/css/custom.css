@@ -240,12 +240,17 @@ table td {
     margin: 20px 0;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2c635dc (add station_table_3h_recent_rain And table_update_rainfall)
 .my-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
 }
 
+<<<<<<< HEAD
 
 .my-table th:nth-child(1),
 .my-table td:nth-child(1) {
@@ -272,6 +277,8 @@ table td {
     width: 20%; /* اندازه ستون زمان ثبت اطلاعات */
 }
 
+=======
+>>>>>>> 2c635dc (add station_table_3h_recent_rain And table_update_rainfall)
 .my-table th {
     border: 1px solid #ddd;
     padding: 8px;
@@ -352,6 +359,37 @@ table td {
     background-color: #45a049;
 }
 
+<<<<<<< HEAD
+=======
+/*!* استایل اصلی برای نوار ناوبری *!*/
+/*.navbar-nav {*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*    list-style: none;*/
+/*}*/
+
+/*!* استایل لینک‌های نوار ناوبری *!*/
+/*.navbar-nav > li > a {*/
+/*    display: block;*/
+/*    padding: 10px 15px;*/
+/*    text-decoration: none;*/
+/*    color: #333; !* رنگ متن لینک‌ها *!*/
+/*    background-color: #f8f8f8; !* رنگ پس‌زمینه لینک‌ها *!*/
+/*    transition: all 0.3s ease; !* افکت انتقال برای hover *!*/
+/*}*/
+
+/*!* تغییر رنگ لینک‌ها هنگام قرار گرفتن موس بر روی آن‌ها *!*/
+/*.navbar-nav > li > a:hover,*/
+/*.navbar-nav > li > a.active {*/
+/*    color: #fff; !* رنگ متن لینک‌ها هنگام hover *!*/
+/*    background-color: #007bff; !* رنگ پس‌زمینه لینک‌ها هنگام hover *!*/
+/*}*/
+
+/*!* استایل منوهای تو در تو *!*/
+/*.dropdown-hover {*/
+/*    position: relative;*/
+/*}*/
+>>>>>>> 2c635dc (add station_table_3h_recent_rain And table_update_rainfall)
 
 .dropdown-menu {
     display: none;
@@ -364,7 +402,11 @@ table td {
     border: none;
     border-radius: 10px;
     background-color: #f8f8f8;
+<<<<<<< HEAD
     box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+=======
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+>>>>>>> 2c635dc (add station_table_3h_recent_rain And table_update_rainfall)
     z-index: 1000;
 }
 
@@ -373,6 +415,7 @@ table td {
     display: block;
 }
 
+<<<<<<< HEAD
 
 .leave-table {
     width: 100%;
@@ -737,3 +780,17 @@ table td {
         font-size: 11px;
     }
 }
+=======
+/*!* استایل زیرمنوها *!*/
+/*.dropdown-menu > li > a {*/
+/*    padding: 5px 20px;*/
+/*    color: #333;*/
+/*    background-color: transparent;*/
+/*    transition: all 0.3s ease;*/
+/*}*/
+
+/*.dropdown-menu > li > a:hover {*/
+/*    color: #fff;*/
+/*    background-color: #007bff;*/
+/*}*/
+>>>>>>> 2c635dc (add station_table_3h_recent_rain And table_update_rainfall)
