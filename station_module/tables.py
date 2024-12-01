@@ -92,7 +92,6 @@ class RecentRainGaugeLatLongTable(tables.Table):
         fields = ['city', 'title', 'latitude', 'longitude', 'recent_rainfall']
         attrs = {'class': 'table table-striped table-hover table-bordered table-sm'}
 
-
 class Rainfall24hTable(tables.Table):
     row_number = tables.Column(
         empty_values=(),
@@ -104,12 +103,14 @@ class Rainfall24hTable(tables.Table):
     city = tables.Column(
         verbose_name="شهرستان",
         orderable=True,
-        attrs={'th': {'class': 'text-center column-city unique-city'}, 'td': {'class': 'text-center unique-city'}}
+        attrs={'th': {'class': 'text-center column-city unique-city'},
+               'td': {'class': 'text-center unique-city'}}
     )
     title = tables.Column(
         verbose_name="ایستگاه",
         orderable=True,
-        attrs={'th': {'class': 'text-center column-title unique-title'}, 'td': {'class': 'text-center unique-title'}}
+        attrs={'th': {'class': 'text-center column-title unique-title'},
+               'td': {'class': 'text-center unique-title'}}
     )
     rainfall_24h = tables.Column(
         verbose_name="24 ساعته",
@@ -136,29 +137,32 @@ class Rainfall24hTable(tables.Table):
                'td': {'class': 'text-center unique-last-date-time'}}
     )
 
+    def __init__(self, *args, **kwargs):
+        # استخراج شماره ردیف اولیه از پارامترهای ورودی
+        self.start_row_number = kwargs.pop('start_row_number', 0)
+        super().__init__(*args, **kwargs)
+        # مقدار شمارنده با شماره ردیف اولیه شروع می‌شود
+        self.counter = self.start_row_number
+
     def render_row_number(self, *args, **kwargs):
-        self.counter += 1  # افزایش شمارنده
+        # افزایش شمارنده در هر ردیف
+        self.counter += 1
         return self.counter
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.counter = 0  # مقدار اولیه شمارنده
-
     def render_last_rainfall_date_time(self, value):
+        # تبدیل تاریخ میلادی به جلالی
         if value is None:
             return ''
-        else:
-            return datetime2jalali(value).strftime('%H:%M:%S - %Y/%m/%d')
+        return datetime2jalali(value).strftime('%H:%M:%S - %Y/%m/%d')
 
     class Meta:
         model = Station
         template_name = 'django_tables2/bootstrap4.html'
         fields = ['city', 'title', 'rainfall_24h', 'recent_rainfall', 'year_rainfall', 'last_rainfall_date_time']
-        sequence = ('row_number', 'city', 'title', 'rainfall_24h', 'recent_rainfall', 'year_rainfall',
-                    'last_rainfall_date_time')  # ترتیب ستون‌ها
-        order_by = '-recent_rainfall'  # مرتب‌سازی پیش‌فرض جدول
-
+        sequence = ('row_number', 'city', 'title', 'rainfall_24h', 'recent_rainfall', 'year_rainfall', 'last_rainfall_date_time')
+        order_by = '-recent_rainfall'
         attrs = {
             'class': 'table table-bordered table-striped table-sm',
             'thead': {'class': 'thead-light'},
         }
+

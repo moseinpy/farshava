@@ -26,6 +26,8 @@ from django.shortcuts import render, redirect
 from .models import Station
 from django.contrib import messages
 from .tables import Rainfall24hTable
+from django.core.paginator import Paginator
+
 
 
 class StationListView(ListView):
@@ -536,6 +538,9 @@ def table_update_24h_rainfall(request):
     return render(request, 'station_module/table_update_24h_rainfall.html', {'stations': stations})
 
 
+
+
+
 def rainfall_24h(request):
     today = timezone.now()
 
@@ -543,10 +548,11 @@ def rainfall_24h(request):
     period = int(request.GET.get('period', 12))
     rainfall_type = request.GET.get('rainfall_type', 'recent')  # نوع بارش (روزانه، اخیر، زراعی)
 
+    # تبدیل تاریخ به جلالی (فرض می‌شود تابع date2jalali تعریف شده است)
     date_jalali = date2jalali(today - datetime.timedelta(days=365)).strftime('%d-%m-%Y')
 
     # محاسبه بازه‌های زمانی
-    start_date_24h = today - datetime.timedelta(hours=12)  # تغییر به 12 ساعت
+    start_date_24h = today - datetime.timedelta(hours=12)
     start_date_recent = today - datetime.timedelta(days=4)
 
     # دریافت داده‌ها و مقداردهی صفر به ایستگاه‌های بدون دیتا یا با داده‌های قدیمی
@@ -555,27 +561,35 @@ def rainfall_24h(request):
         # صفر کردن بارش 24 ساعته اگر از 12 ساعت گذشته باشد
         if not station.last_rainfall_date_time or station.last_rainfall_date_time < start_date_24h:
             station.rainfall_24h = 0
-            station.save()  # ذخیره تغییرات در مدل
+            station.save()
 
         # صفر کردن بارش اخیر اگر از 4 روز گذشته باشد
         if not station.last_rainfall_date_time or station.last_rainfall_date_time < start_date_recent:
             station.recent_rainfall = 0
-            station.save()  # ذخیره تغییرات در مدل
+            station.save()
 
     # فیلتر براساس نوع بارش
     if rainfall_type == 'daily':
-        stations = stations.order_by('-rainfall_24h')  # مرتب‌سازی بر اساس بارش 24 ساعته از بیشترین به کمترین
+        stations = stations.order_by('-rainfall_24h')
     elif rainfall_type == 'recent':
-        stations = stations.order_by('-recent_rainfall')  # مرتب‌سازی بر اساس بارش اخیر از بیشترین به کمترین
+        stations = stations.order_by('-recent_rainfall')
     elif rainfall_type == 'crop':
-        stations = stations.order_by('-year_rainfall')  # مرتب‌سازی بر اساس بارش سال زراعی از بیشترین به کمترین
+        stations = stations.order_by('-year_rainfall')
+
+    # تنظیم صفحه‌بندی
+    paginator = Paginator(stations, 20)
+    page_number = request.GET.get('page', 1)
+    page = paginator.get_page(page_number)
+
+    # محاسبه شماره ردیف برای صفحه جاری
+    start_row_number = (page.number - 1) * paginator.per_page
 
     # ایجاد جدول
-    table = Rainfall24hTable(stations)
+    table = Rainfall24hTable(stations, start_row_number=start_row_number)
     RequestConfig(request, paginate={"per_page": 20}).configure(table)
 
     # ساخت نقشه
-    m = folium.Map(location=[29.1044, 53.0454], zoom_start=7)  # مختصات استان فارس
+    m = folium.Map(location=[29.1044, 53.0454], zoom_start=7)
 
     # بارگذاری فایل GeoJSON برای مرز شهرها
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -608,14 +622,20 @@ def rainfall_24h(request):
 
     # ایجاد داده‌های HeatMap
     if rainfall_type == 'daily':
-        heat_data = [[station.latitude, station.longitude, station.rainfall_24h] for station in stations if
-                     station.rainfall_24h > 0]
+        heat_data = [
+            [station.latitude, station.longitude, station.rainfall_24h]
+            for station in stations if station.rainfall_24h is not None and station.rainfall_24h > 0
+        ]
     elif rainfall_type == 'recent':
-        heat_data = [[station.latitude, station.longitude, station.recent_rainfall] for station in stations if
-                     station.recent_rainfall > 0]
+        heat_data = [
+            [station.latitude, station.longitude, station.recent_rainfall]
+            for station in stations if station.recent_rainfall is not None and station.recent_rainfall > 0
+        ]
     elif rainfall_type == 'crop':
-        heat_data = [[station.latitude, station.longitude, station.year_rainfall] for station in stations if
-                     station.year_rainfall > 0]
+        heat_data = [
+            [station.latitude, station.longitude, station.year_rainfall]
+            for station in stations if station.year_rainfall is not None and station.year_rainfall > 0
+        ]
 
     HeatMap(heat_data).add_to(m)
 
@@ -631,7 +651,8 @@ def rainfall_24h(request):
         elif rainfall_type == 'crop':
             rainfall_value = station.year_rainfall
 
-        if rainfall_value > 0:
+        # فقط اگر مقدار بارش معتبر باشد، مارکر اضافه می‌شود
+        if rainfall_value is not None and rainfall_value > 0:
             folium.Marker(
                 location=[station.latitude, station.longitude],
                 popup=f"{station.title} - بارندگی: {rainfall_value} میلیمتر",
@@ -640,8 +661,9 @@ def rainfall_24h(request):
 
     # تبدیل نقشه به HTML
     map_html = m._repr_html_()
-    allowed_users = ['2559110393', '2450451331']
 
+    # کاربران مجاز
+    allowed_users = ['2559110393', '2450451331']
 
     return render(request, 'station_module/rainfall_24h.html', {
         'table': table,
@@ -652,6 +674,123 @@ def rainfall_24h(request):
         'date_jalali': date_jalali,
         'allowed_users': allowed_users
     })
+
+# def rainfall_24h(request):
+#     today = timezone.now()
+#
+#     # دریافت بازه زمانی مورد نظر (24، 48، 72، یا 96 ساعت)
+#     period = int(request.GET.get('period', 12))
+#     rainfall_type = request.GET.get('rainfall_type', 'recent')  # نوع بارش (روزانه، اخیر، زراعی)
+#
+#     date_jalali = date2jalali(today - datetime.timedelta(days=365)).strftime('%d-%m-%Y')
+#
+#     # محاسبه بازه‌های زمانی
+#     start_date_24h = today - datetime.timedelta(hours=12)  # تغییر به 12 ساعت
+#     start_date_recent = today - datetime.timedelta(days=4)
+#
+#     # دریافت داده‌ها و مقداردهی صفر به ایستگاه‌های بدون دیتا یا با داده‌های قدیمی
+#     stations = Station.objects.all()
+#     for station in stations:
+#         # صفر کردن بارش 24 ساعته اگر از 12 ساعت گذشته باشد
+#         if not station.last_rainfall_date_time or station.last_rainfall_date_time < start_date_24h:
+#             station.rainfall_24h = 0
+#             station.save()  # ذخیره تغییرات در مدل
+#
+#         # صفر کردن بارش اخیر اگر از 4 روز گذشته باشد
+#         if not station.last_rainfall_date_time or station.last_rainfall_date_time < start_date_recent:
+#             station.recent_rainfall = 0
+#             station.save()  # ذخیره تغییرات در مدل
+#
+#     # فیلتر براساس نوع بارش
+#     if rainfall_type == 'daily':
+#         stations = stations.order_by('-rainfall_24h')  # مرتب‌سازی بر اساس بارش 24 ساعته از بیشترین به کمترین
+#     elif rainfall_type == 'recent':
+#         stations = stations.order_by('-recent_rainfall')  # مرتب‌سازی بر اساس بارش اخیر از بیشترین به کمترین
+#     elif rainfall_type == 'crop':
+#         stations = stations.order_by('-year_rainfall')  # مرتب‌سازی بر اساس بارش سال زراعی از بیشترین به کمترین
+#
+#     # ایجاد جدول
+#     table = Rainfall24hTable(stations)
+#     RequestConfig(request, paginate={"per_page": 20}).configure(table)
+#
+#     # ساخت نقشه
+#     m = folium.Map(location=[29.1044, 53.0454], zoom_start=7)  # مختصات استان فارس
+#
+#     # بارگذاری فایل GeoJSON برای مرز شهرها
+#     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+#     with open(os.path.join(BASE_DIR, 'geojson_files', 'FarsCity.json'), 'r') as f:
+#         geojson_data_cities = json.load(f)
+#
+#     folium.GeoJson(
+#         geojson_data_cities,
+#         style_function=lambda feature: {
+#             'fillColor': '#ffffff00',
+#             'color': 'gray',
+#             'weight': 2,
+#             'fillOpacity': 0.7,
+#         }
+#     ).add_to(m)
+#
+#     # بارگذاری فایل GeoJSON برای مرز استان
+#     with open(os.path.join(BASE_DIR, 'geojson_files', 'Fars.json'), 'r') as f:
+#         geojson_data_province = json.load(f)
+#
+#     folium.GeoJson(
+#         geojson_data_province,
+#         style_function=lambda feature: {
+#             'fillColor': '#ffffff00',
+#             'color': 'black',
+#             'weight': 3,
+#             'fillOpacity': 0.5,
+#         }
+#     ).add_to(m)
+#
+#     # ایجاد داده‌های HeatMap
+#     if rainfall_type == 'daily':
+#         heat_data = [[station.latitude, station.longitude, station.rainfall_24h] for station in stations if
+#                      station.rainfall_24h > 0]
+#     elif rainfall_type == 'recent':
+#         heat_data = [[station.latitude, station.longitude, station.recent_rainfall] for station in stations if
+#                      station.recent_rainfall > 0]
+#     elif rainfall_type == 'crop':
+#         heat_data = [[station.latitude, station.longitude, station.year_rainfall] for station in stations if
+#                      station.year_rainfall > 0]
+#
+#     HeatMap(heat_data).add_to(m)
+#
+#     # اضافه کردن MarkerCluster
+#     marker_cluster = MarkerCluster().add_to(m)
+#
+#     for station in stations:
+#         rainfall_value = 0
+#         if rainfall_type == 'daily':
+#             rainfall_value = station.rainfall_24h
+#         elif rainfall_type == 'recent':
+#             rainfall_value = station.recent_rainfall
+#         elif rainfall_type == 'crop':
+#             rainfall_value = station.year_rainfall
+#
+#         if rainfall_value > 0:
+#             folium.Marker(
+#                 location=[station.latitude, station.longitude],
+#                 popup=f"{station.title} - بارندگی: {rainfall_value} میلیمتر",
+#                 icon=folium.Icon(color="blue", icon='cloud')
+#             ).add_to(marker_cluster)
+#
+#     # تبدیل نقشه به HTML
+#     map_html = m._repr_html_()
+#     allowed_users = ['2559110393', '2450451331']
+#
+#
+#     return render(request, 'station_module/rainfall_24h.html', {
+#         'table': table,
+#         'rainfall_type': rainfall_type,
+#         'period': period,
+#         'map_html': map_html,
+#         'today': today,
+#         'date_jalali': date_jalali,
+#         'allowed_users': allowed_users
+#     })
 
 
 @login_required
