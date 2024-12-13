@@ -549,10 +549,10 @@ def rainfall_24h(request):
     rainfall_type = request.GET.get('rainfall_type', 'recent')  # نوع بارش (روزانه، اخیر، زراعی)
 
     # تبدیل تاریخ به جلالی (فرض می‌شود تابع date2jalali تعریف شده است)
-    date_jalali = date2jalali(today - datetime.timedelta(days=365)).strftime('%d-%m-%Y')
+    date_jalali = date2jalali(today).strftime('%d-%m-%Y')
 
     # محاسبه بازه‌های زمانی
-    start_date_24h = today - datetime.timedelta(hours=12)
+    start_date_24h = today - datetime.timedelta(hours=8)
     start_date_recent = today - datetime.timedelta(days=4)
 
     # دریافت داده‌ها و مقداردهی صفر به ایستگاه‌های بدون دیتا یا با داده‌های قدیمی
@@ -804,7 +804,7 @@ def rainfall_24h_export_xls(request):
     date_jalali = date2jalali(today - datetime.timedelta(days=365)).strftime('%d-%m-%Y')
 
     # محاسبه بازه‌های زمانی
-    start_date_24h = today - datetime.timedelta(hours=12)  # تغییر به 12 ساعت
+    start_date_24h = today - datetime.timedelta(hours=8)  # تغییر به 8 ساعت
     start_date_recent = today - datetime.timedelta(days=4)
 
     # دریافت داده‌ها و مقداردهی صفر به ایستگاه‌های بدون دیتا یا با داده‌های قدیمی
@@ -913,7 +913,7 @@ def rainfall_24h_export_lat_long_xls(request):
     date_jalali = date2jalali(today - datetime.timedelta(days=365)).strftime('%d-%m-%Y')
 
     # محاسبه بازه‌های زمانی
-    start_date_24h = today - datetime.timedelta(hours=12)  # تغییر به 12 ساعت
+    start_date_24h = today - datetime.timedelta(hours=8)  # تغییر به 8 ساعت
     start_date_recent = today - datetime.timedelta(days=4)
 
     # دریافت داده‌ها و مقداردهی صفر به ایستگاه‌های بدون دیتا یا با داده‌های قدیمی
