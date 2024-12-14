@@ -31,7 +31,6 @@ import jdatetime
 from django.utils.timezone import localtime
 
 
-
 class StationListView(ListView):
     template_name = 'station_module/station_list.html'
     model = Station
@@ -540,9 +539,6 @@ def table_update_24h_rainfall(request):
     return render(request, 'station_module/table_update_24h_rainfall.html', {'stations': stations})
 
 
-
-
-
 def rainfall_24h(request):
     today = timezone.now()
 
@@ -677,6 +673,7 @@ def rainfall_24h(request):
         'allowed_users': allowed_users
     })
 
+
 # def rainfall_24h(request):
 #     today = timezone.now()
 #
@@ -793,8 +790,6 @@ def rainfall_24h(request):
 #         'date_jalali': date_jalali,
 #         'allowed_users': allowed_users
 #     })
-
-
 
 
 # @login_required
@@ -961,7 +956,6 @@ def rainfall_24h(request):
 #     return response
 
 
-
 @login_required
 def rainfall_24h_export_xls(request):
     today = timezone.now()
@@ -1060,15 +1054,48 @@ def rainfall_24h_export_xls(request):
         adjusted_width = max_length + 2  # اضافه کردن فاصله اضافی
         ws.column_dimensions[column_letter].width = adjusted_width
 
+    # تعریف دیکشنری برای نگاشت نام روزها به فارسی
+    days_mapping = {
+        'Saturday': 'شنبه',
+        'Sunday': 'یکشنبه',
+        'Monday': 'دوشنبه',
+        'Tuesday': 'سه‌شنبه',
+        'Wednesday': 'چهارشنبه',
+        'Thursday': 'پنج‌شنبه',
+        'Friday': 'جمعه'
+    }
+
+    # اضافه کردن یک سطر به ابتدای جدول
+    jalali_today = jdatetime.datetime.fromgregorian(datetime=today)
+    day_name = jalali_today.strftime('%A')  # دریافت نام روز
+    jalali_date = jalali_today.strftime('%Y/%m/%d')
+    # ترجمه نام روز به فارسی
+    day_name_persian = days_mapping.get(day_name, day_name)  # اگر نام روز موجود نبود، انگلیسی برمی‌گرداند
+
+    # ترکیب نام روز و تاریخ
+    merge_text = f"بارشهای اخیر در سطح استان فارس - {day_name_persian} {jalali_date}"
+
+    # اضافه کردن سطر توضیحی در بالا
+    ws.insert_rows(1)
+    ws.merge_cells(start_row=1, start_column=1, end_row=1, end_column=6)
+    header_cell = ws.cell(row=1, column=1, value=merge_text)
+    header_cell.alignment = Alignment(horizontal='center', vertical='center')
+    header_cell.font = Font(name="B Titr", bold=True, size=14, color='000000')
+    header_cell.fill = PatternFill(start_color='FFFF00', end_color='FFFF00', fill_type='solid')  # رنگ زرد
+
+    # تغییر رنگ سطر دوم (سطر هدر) به نارنجی
+    for col_num in range(1, len(headers) + 1):
+        ws.cell(row=2, column=col_num).fill = PatternFill(start_color='FFA500', end_color='FFA500', fill_type='solid')
+
+    # تنظیم تکرار سطر دوم در تمام صفحات هنگام پرینت
+    ws.print_title_rows = '2:2'
+
     # ایجاد پاسخ دانلود اکسل
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = f'attachment; filename=rainfall_24h_data_{today.strftime("%Y-%m-%d")}.xlsx'
     wb.save(response)
 
     return response
-
-
-
 
 
 @login_required
