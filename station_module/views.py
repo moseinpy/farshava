@@ -674,286 +674,6 @@ def rainfall_24h(request):
     })
 
 
-# def rainfall_24h(request):
-#     today = timezone.now()
-#
-#     # دریافت بازه زمانی مورد نظر (24، 48، 72، یا 96 ساعت)
-#     period = int(request.GET.get('period', 12))
-#     rainfall_type = request.GET.get('rainfall_type', 'recent')  # نوع بارش (روزانه، اخیر، زراعی)
-#
-#     date_jalali = date2jalali(today - datetime.timedelta(days=365)).strftime('%d-%m-%Y')
-#
-#     # محاسبه بازه‌های زمانی
-#     start_date_24h = today - datetime.timedelta(hours=12)  # تغییر به 12 ساعت
-#     start_date_recent = today - datetime.timedelta(days=4)
-#
-#     # دریافت داده‌ها و مقداردهی صفر به ایستگاه‌های بدون دیتا یا با داده‌های قدیمی
-#     stations = Station.objects.all()
-#     for station in stations:
-#         # صفر کردن بارش 24 ساعته اگر از 12 ساعت گذشته باشد
-#         if not station.last_rainfall_date_time or station.last_rainfall_date_time < start_date_24h:
-#             station.rainfall_24h = 0
-#             station.save()  # ذخیره تغییرات در مدل
-#
-#         # صفر کردن بارش اخیر اگر از 4 روز گذشته باشد
-#         if not station.last_rainfall_date_time or station.last_rainfall_date_time < start_date_recent:
-#             station.recent_rainfall = 0
-#             station.save()  # ذخیره تغییرات در مدل
-#
-#     # فیلتر براساس نوع بارش
-#     if rainfall_type == 'daily':
-#         stations = stations.order_by('-rainfall_24h')  # مرتب‌سازی بر اساس بارش 24 ساعته از بیشترین به کمترین
-#     elif rainfall_type == 'recent':
-#         stations = stations.order_by('-recent_rainfall')  # مرتب‌سازی بر اساس بارش اخیر از بیشترین به کمترین
-#     elif rainfall_type == 'crop':
-#         stations = stations.order_by('-year_rainfall')  # مرتب‌سازی بر اساس بارش سال زراعی از بیشترین به کمترین
-#
-#     # ایجاد جدول
-#     table = Rainfall24hTable(stations)
-#     RequestConfig(request, paginate={"per_page": 20}).configure(table)
-#
-#     # ساخت نقشه
-#     m = folium.Map(location=[29.1044, 53.0454], zoom_start=7)  # مختصات استان فارس
-#
-#     # بارگذاری فایل GeoJSON برای مرز شهرها
-#     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-#     with open(os.path.join(BASE_DIR, 'geojson_files', 'FarsCity.json'), 'r') as f:
-#         geojson_data_cities = json.load(f)
-#
-#     folium.GeoJson(
-#         geojson_data_cities,
-#         style_function=lambda feature: {
-#             'fillColor': '#ffffff00',
-#             'color': 'gray',
-#             'weight': 2,
-#             'fillOpacity': 0.7,
-#         }
-#     ).add_to(m)
-#
-#     # بارگذاری فایل GeoJSON برای مرز استان
-#     with open(os.path.join(BASE_DIR, 'geojson_files', 'Fars.json'), 'r') as f:
-#         geojson_data_province = json.load(f)
-#
-#     folium.GeoJson(
-#         geojson_data_province,
-#         style_function=lambda feature: {
-#             'fillColor': '#ffffff00',
-#             'color': 'black',
-#             'weight': 3,
-#             'fillOpacity': 0.5,
-#         }
-#     ).add_to(m)
-#
-#     # ایجاد داده‌های HeatMap
-#     if rainfall_type == 'daily':
-#         heat_data = [[station.latitude, station.longitude, station.rainfall_24h] for station in stations if
-#                      station.rainfall_24h > 0]
-#     elif rainfall_type == 'recent':
-#         heat_data = [[station.latitude, station.longitude, station.recent_rainfall] for station in stations if
-#                      station.recent_rainfall > 0]
-#     elif rainfall_type == 'crop':
-#         heat_data = [[station.latitude, station.longitude, station.year_rainfall] for station in stations if
-#                      station.year_rainfall > 0]
-#
-#     HeatMap(heat_data).add_to(m)
-#
-#     # اضافه کردن MarkerCluster
-#     marker_cluster = MarkerCluster().add_to(m)
-#
-#     for station in stations:
-#         rainfall_value = 0
-#         if rainfall_type == 'daily':
-#             rainfall_value = station.rainfall_24h
-#         elif rainfall_type == 'recent':
-#             rainfall_value = station.recent_rainfall
-#         elif rainfall_type == 'crop':
-#             rainfall_value = station.year_rainfall
-#
-#         if rainfall_value > 0:
-#             folium.Marker(
-#                 location=[station.latitude, station.longitude],
-#                 popup=f"{station.title} - بارندگی: {rainfall_value} میلیمتر",
-#                 icon=folium.Icon(color="blue", icon='cloud')
-#             ).add_to(marker_cluster)
-#
-#     # تبدیل نقشه به HTML
-#     map_html = m._repr_html_()
-#     allowed_users = ['2559110393', '2450451331']
-#
-#
-#     return render(request, 'station_module/rainfall_24h.html', {
-#         'table': table,
-#         'rainfall_type': rainfall_type,
-#         'period': period,
-#         'map_html': map_html,
-#         'today': today,
-#         'date_jalali': date_jalali,
-#         'allowed_users': allowed_users
-#     })
-
-
-# @login_required
-# def rainfall_24h_export_xls(request):
-#     today = localtime(timezone.now())
-#
-#     # دریافت بازه زمانی مورد نظر (24، 48، 72، یا 96 ساعت)
-#     period = int(request.GET.get('period', 12))
-#     rainfall_type = request.GET.get('rainfall_type', 'daily')  # نوع بارش (روزانه، اخیر، زراعی)
-#
-#     # محاسبه بازه‌های زمانی
-#     start_date_24h = today - datetime.timedelta(hours=8)  # تغییر به 8 ساعت
-#     start_date_recent = today - datetime.timedelta(days=4)
-#
-#     # دریافت داده‌ها و مقداردهی صفر به ایستگاه‌های بدون دیتا یا با داده‌های قدیمی
-#     stations = Station.objects.all().order_by('-recent_rainfall')
-#     for station in stations:
-#         # صفر کردن بارش 24 ساعته اگر از 12 ساعت گذشته باشد
-#         if not station.last_rainfall_date_time or station.last_rainfall_date_time < start_date_24h:
-#             station.rainfall_24h = 0
-#             station.save()  # ذخیره تغییرات در مدل
-#
-#         # صفر کردن بارش اخیر اگر از 4 روز گذشته باشد
-#         if not station.last_rainfall_date_time or station.last_rainfall_date_time < start_date_recent:
-#             station.recent_rainfall = 0
-#             station.save()  # ذخیره تغییرات در مدل
-#
-#     # فیلتر براساس نوع بارش
-#     if rainfall_type == 'daily':
-#         stations = stations  # مرتب‌سازی بر اساس بارش 24 ساعته از بیشترین به کمترین
-#     elif rainfall_type == 'recent':
-#         stations = stations.order_by('-recent_rainfall')  # مرتب‌سازی بر اساس بارش اخیر از بیشترین به کمترین
-#     elif rainfall_type == 'crop':
-#         stations = stations  # مرتب‌سازی بر اساس بارش سال زراعی از بیشترین به کمترین
-#
-#     # ایجاد فایل اکسل
-#     wb = Workbook()
-#     ws = wb.active
-#     ws.sheet_view.rightToLeft = True
-#
-#     ws.title = "بارش‌ها"
-#
-#     # تنظیمات استایل
-#     header_font = Font(bold=True, size=12, color='000000')
-#     header_fill = PatternFill(start_color='D3D3D3', end_color='D3D3D3', fill_type='solid')
-#     border = Border(left=Side(style='thin'), right=Side(style='thin'), top=Side(style='thin'),
-#                     bottom=Side(style='thin'))
-#     thick_border = Border(
-#         left=Side(style='thick', color='000000'),
-#         right=Side(style='thick', color='000000'),
-#         top=Side(style='thick', color='000000'),
-#         bottom=Side(style='thick', color='000000')
-#     )
-#
-#     # تعریف دیکشنری برای نگاشت نام روزها به فارسی
-#     days_mapping = {
-#         'Saturday': 'شنبه',
-#         'Sunday': 'یکشنبه',
-#         'Monday': 'دوشنبه',
-#         'Tuesday': 'سه‌شنبه',
-#         'Wednesday': 'چهارشنبه',
-#         'Thursday': 'پنج‌شنبه',
-#         'Friday': 'جمعه'
-#     }
-#
-#     # اضافه کردن یک سطر به ابتدای جدول
-#     jalali_today = jdatetime.datetime.fromgregorian(datetime=today)
-#     day_name = jalali_today.strftime('%A')  # دریافت نام روز
-#     jalali_date = jalali_today.strftime('%Y/%m/%d')
-#     # ترجمه نام روز به فارسی
-#     day_name_persian = days_mapping.get(day_name, day_name)  # اگر نام روز موجود نبود، انگلیسی برمی‌گرداند
-#
-#     # ترکیب نام روز و تاریخ
-#     merge_text = f"بارش اخیر در استان فارس - {day_name_persian} {jalali_date}"
-#
-#     # درج متن در سلول‌های ترکیب‌شده
-#     ws.merge_cells(start_row=1, start_column=1, end_row=1, end_column=6)  # ترکیب سلول‌ها از ستون 1 تا 6
-#     merged_cell = ws.cell(row=1, column=1, value=merge_text)
-#     merged_cell.alignment = Alignment(horizontal='center', vertical='center')
-#     merged_cell.font = Font(name='B Titr', bold=True, size=14)
-#     merged_cell.fill = PatternFill(start_color='FFA500', end_color='FFA500', fill_type='solid')  # رنگ نارنجی
-#
-#     # تنظیم استایل حاشیه دور سلول‌های ترکیب‌شده
-#     merged_cell.border = thick_border
-#
-#     # تنظیم ستون "تاریخ و ساعت" به‌صورت جداگانه
-#     date_time_cell = ws.cell(row=1, column=7)  # ستون 7 (تاریخ و ساعت)
-#     date_time_cell.border = thick_border
-#
-#     # نوشتن هدرها در سطر 2
-#     headers = ['ردیف', 'شهرستان', 'ایستگاه', 'بارش 24 ساعته (mm)', 'بارش اخیر (mm)', 'بارش سال آبی (mm)',
-#                'تاریخ و ساعت ثبت']
-#     for col_num, header in enumerate(headers, 1):
-#         cell = ws.cell(row=2, column=col_num, value=header)
-#         cell.font = header_font
-#         cell.alignment = Alignment(horizontal='center', vertical='center')
-#         cell.border = border
-#         cell.fill = header_fill
-#
-#     # نوشتن داده‌ها از سطر 3 به بعد
-#     for row_num, station in enumerate(stations, 3):
-#         ws.cell(row=row_num, column=1, value=row_num - 2).alignment = Alignment(horizontal='center', vertical='center')
-#         ws.cell(row=row_num, column=2, value=station.city).alignment = Alignment(horizontal='center', vertical='center')
-#         ws.cell(row=row_num, column=3, value=station.title).alignment = Alignment(horizontal='center',
-#                                                                                   vertical='center')
-#         ws.cell(row=row_num, column=4, value=station.rainfall_24h).alignment = Alignment(horizontal='center',
-#                                                                                          vertical='center')
-#         ws.cell(row=row_num, column=5, value=station.recent_rainfall).alignment = Alignment(horizontal='center',
-#                                                                                             vertical='center')
-#         ws.cell(row=row_num, column=6, value=station.year_rainfall).alignment = Alignment(horizontal='center',
-#                                                                                           vertical='center')
-#         ws.cell(row=row_num, column=7, value=station.last_rainfall_date_time.strftime(
-#             '%H:%M:%S - %Y/%m/%d') if station.last_rainfall_date_time else '').alignment = Alignment(
-#             horizontal='center', vertical='center')
-#
-#         # افزودن مرز به سلول‌ها
-#         for col_num in range(1, 8):
-#             ws.cell(row=row_num, column=col_num).border = border
-#
-#         # رنگ‌بندی سطرها
-#         if row_num % 2 == 0:
-#             for col_num in range(1, len(headers) + 1):
-#                 ws.cell(row=row_num, column=col_num).fill = PatternFill(start_color='E6E6E6', end_color='E6E6E6',
-#                                                                         fill_type='solid')
-#         else:
-#             for col_num in range(1, len(headers) + 1):
-#                 ws.cell(row=row_num, column=col_num).fill = PatternFill(start_color='FFFFFF', end_color='FFFFFF',
-#
-#                                                                         fill_type='solid')
-#
-#     for col in ws.columns:
-#         max_length = 0
-#         col_letter = col[0].column_letter
-#         for cell in col[1:]:  # از سطر دوم به بعد
-#             try:
-#                 if cell.value:
-#                     max_length = max(max_length, len(str(cell.value)))
-#             except:
-#                 pass
-#         adjusted_width = max_length + 2
-#         ws.column_dimensions[col_letter].width = adjusted_width
-#
-#     # حاشیه دور جدول
-#     for row_num in range(1, ws.max_row + 1):
-#         for col_num in range(1, len(headers) + 1):
-#             cell = ws.cell(row=row_num, column=col_num)
-#
-#             # خطوط بالا و پایین
-#             if row_num == 1:  # اولین ردیف (سطر ترکیب شده)
-#                 cell.border = Border(top=thick_border.top, left=cell.border.left, right=cell.border.right)
-#             if row_num == ws.max_row:  # آخرین ردیف
-#                 cell.border = Border(bottom=thick_border.bottom, left=cell.border.left, right=cell.border.right)
-#
-#             # خطوط چپ و راست
-#             if col_num == 1:  # اولین ستون
-#                 cell.border = Border(left=thick_border.left, top=cell.border.top, bottom=cell.border.bottom)
-#             if col_num == len(headers):  # آخرین ستون
-#                 cell.border = Border(right=thick_border.right, top=cell.border.top, bottom=cell.border.bottom)
-#
-#     # ذخیره فایل اکسل
-#     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-#     response['Content-Disposition'] = 'attachment; filename=rainfall_report.xlsx'
-#     wb.save(response)
-#     return response
 
 
 @login_required
@@ -1210,3 +930,97 @@ def rainfall_24h_export_lat_long_xls(request):
     wb.save(response)
 
     return response
+
+
+@login_required
+def table_update_temperature(request):
+    current_user = request.user
+    workplace_code = None
+    if hasattr(current_user, 'employee'):
+        workplace_code = current_user.employee.workplace_code
+
+    stations = Station.objects.filter(parent_station__code__exact=workplace_code, code__gte=19000, code__lte=99999)
+
+    if request.method == 'POST':
+        for station in stations:
+            # دریافت مقادیر از فرم با استفاده از شناسه ایستگاه
+            max_temperature = request.POST.get(f'max_temperature_{station.id}', '').strip()
+            min_temperature = request.POST.get(f'min_temperature_{station.id}', '').strip()
+            soil_min_temperature = request.POST.get(f'soil_min_temperature_{station.id}', '').strip()
+
+            # تبدیل مقادیر دریافتی به float و بررسی اینکه آیا مقدار معتبر است
+            try:
+                if max_temperature:
+                    station.max_temperature = float(max_temperature)
+                if min_temperature:
+                    station.min_temperature = float(min_temperature)
+                if soil_min_temperature:
+                    station.soil_min_temperature = float(soil_min_temperature)
+
+                # اگر حداقل یکی از فیلدها مقدار دارد، مدل را ذخیره کنید
+                if max_temperature or min_temperature or soil_min_temperature:
+                    station.save()
+            except ValueError:
+                # اگر مقدار نمی‌تواند به float تبدیل شود یا معتبر نیست، خطا را مدیریت کنید
+                pass
+
+    return render(request, 'station_module/table_update_temperature.html', {'stations': stations})
+
+
+
+def stations_temperature_table(request):
+    # فیلتر ایستگاه‌ها
+    stations = Station.objects.filter(Q(code__gte=19000, code__lte=99999)).order_by('title')
+
+    # بررسی زمان آخرین آپدیت دما
+    ten_hours_ago = timezone.now() - datetime.timedelta(hours=10)
+    for station in stations:
+        if station.time_update_temp and station.time_update_temp < ten_hours_ago:
+            station.max_temperature = None
+            station.min_temperature = None
+            station.soil_min_temperature = None
+            station.save()
+
+    # اگر درخواست برای دانلود اکسل باشد
+    if 'download' in request.GET:
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="temperatures.xlsx"'
+
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Temperatures"
+
+        ws.sheet_view.rightToLeft = True
+
+
+
+        columns = ['ردیف', 'نام ایستگاه', 'دمای بیشینه', 'دمای کمینه', 'دمای کمینه زمین']
+        header_font = Font(bold=True, size=12, color='000000')
+        header_fill = PatternFill(start_color='D3D3D3', end_color='D3D3D3', fill_type='solid')
+        border = Border(left=Side(style='thin'), right=Side(style='thin'), top=Side(style='thin'),
+                        bottom=Side(style='thin'))
+
+        for col_num, column_title in enumerate(columns, 1):
+            cell = ws.cell(row=1, column=col_num, value=column_title)
+            cell.font = header_font
+            cell.alignment = Alignment(horizontal='center', vertical='center')
+            cell.border = border
+
+        for row_num, station in enumerate(stations, 2):
+            ws.cell(row=row_num, column=1, value=row_num - 1).alignment = Alignment(horizontal='center', vertical='center')
+            ws.cell(row=row_num, column=1).border = border
+            ws.cell(row=row_num, column=2, value=station.title).alignment = Alignment(horizontal='center', vertical='center')
+            ws.cell(row=row_num, column=2).border = border
+            ws.cell(row=row_num, column=3, value=station.max_temperature).alignment = Alignment(horizontal='center', vertical='center')
+            ws.cell(row=row_num, column=3).border = border
+            ws.cell(row=row_num, column=4, value=station.min_temperature).alignment = Alignment(horizontal='center', vertical='center')
+            ws.cell(row=row_num, column=4).border = border
+            ws.cell(row=row_num, column=5, value=station.soil_min_temperature).alignment = Alignment(horizontal='center', vertical='center')
+            ws.cell(row=row_num, column=5).border = border
+            # ws.cell(row=row_num, column=6, value=station.time_update_temp).alignment = Alignment(horizontal='center', vertical='center')
+            # ws.cell(row=row_num, column=6).border = border
+
+        wb.save(response)
+        return response
+
+    return render(request, 'station_module/stations_temperature_table.html', {'stations': stations})

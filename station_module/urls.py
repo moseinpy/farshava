@@ -18,4 +18,6 @@ urlpatterns = [
     path('rainfall-24h/', views.rainfall_24h, name='rainfall-24h'),
     path('rainfall_24h/export/xls/', views.rainfall_24h_export_xls, name='rainfall_24h_export_xls'),
     path('rainfall_24h/export/lat-long/xls/', views.rainfall_24h_export_lat_long_xls, name='rainfall_24h_export_lat_long_xls'),
+    path('table-update-temperature/', views.table_update_temperature, name='table_update_temperature'),
+    path('stations-temperature-table/', views.stations_temperature_table, name='stations_temperature_table'),
 ]

@@ -1,0 +1,42 @@
+{% extends 'shared/_layout.html' %}
+
+{% block title %}
+    ثبت اطلاعات دما
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-5 table-responsive">
+        <head>
+            <meta charset="UTF-8">
+            <title>آپدیت دمای ایستگاه‌ها</title>
+        </head>
+        <body>
+        <form method="post">
+            {% csrf_token %}
+            <table class="my-table">
+                <thead>
+                <tr>
+                    <th>نام ایستگاه</th>
+                    <th>دمای بیشینه</th>
+                    <th>دمای کمینه</th>
+                    <th>دمای کمینه خاک</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for station in stations %}
+                    <tr>
+                        <td class="my-cell">{{ station.title }}</td>
+                        <td><input type="number" class="input-temperature" name="max_temperature_{{ station.id }}" step="0.1"></td>
+                        <td><input type="number" class="input-temperature" name="min_temperature_{{ station.id }}" step="0.1"></td>
+                        <td><input type="number" class="input-temperature" name="soil_min_temperature_{{ station.id }}" step="0.1"></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="form-container">
+                <button type="submit" class="btn-save">ذخیره</button>
+            </div>
+        </form>
+        </body>
+    </div>
+{% endblock %}

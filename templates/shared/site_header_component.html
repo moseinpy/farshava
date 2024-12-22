@@ -106,16 +106,16 @@
                                     مقالات
                                 </a>
                             </li>
-{#                            <li>#}
-{#                                <a href="{% url 'recent-rain-gauge' %}"#}
-{#                                   class="{% if request.resolver_match.url_name == 'recent-rain-gauge' %}active{% endif %}">#}
-{#                                    بارش اخیر#}
-{#                                </a>#}
-{#                            </li>#}
                             <li>
                                 <a href="{% url 'rainfall-24h' %}"
                                    class="{% if request.resolver_match.url_name == 'rainfall-24h' %}active{% endif %}">
                                     بارش اخیر
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'stations_temperature_table' %}"
+                                   class="{% if request.resolver_match.url_name == 'stations_temperature_table' %}active{% endif %}">
+                                    دما
                                 </a>
                             </li>
                             {% if request.user.employee %}
@@ -123,13 +123,13 @@
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">ثبت و بروزرسانی<b
                                             class="caret"></b></a>
                                     <ul class="dropdown-menu">
-{#                                        <li><a href="{% url 'rain-gauge-table' %}"#}
-{#                                               class="{% if request.resolver_match.url_name == 'rain-gauge-table' %}active{% endif %}">#}
-{#                                            ثبت بارندگی اخیر#}
-{#                                        </a></li>#}
                                         <li><a href="{% url 'table-update-24h-rainfall' %}"
                                                class="{% if request.resolver_match.url_name == 'table-update-24h-rainfall' %}active{% endif %}">
                                             ثبت بارندگی اخیر
+                                        </a></li>
+                                        <li><a href="{% url 'table_update_temperature' %}"
+                                               class="{% if request.resolver_match.url_name == 'table-update-temperature' %}active{% endif %}">
+                                            ثبت دماها
                                         </a></li>
                                         <li><a href="{% url 'table_update_rainfall' %}"
                                                class="{% if request.resolver_match.url_name == 'table_update_rainfall' %}active{% endif %}">ثبت

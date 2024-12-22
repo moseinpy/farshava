@@ -1,0 +1,40 @@
+{% extends 'shared/_layout.html' %}
+{% load poll_extras %}
+
+{% block title %}
+    نمایش دماهای ایستگاه‌ها
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-5 table-responsive">
+        <h3 class="text-center">جدول دماهای ایستگاه‌های هواشناسی</h3>
+
+        <table class="my-table">
+            <thead>
+            <tr>
+                <th class="my-cell">ردیف</th>
+                <th class="my-cell">نام ایستگاه</th>
+                <th class="my-cell">دمای بیشینه</th>
+                <th class="my-cell">دمای کمینه</th>
+                <th class="my-cell">دمای کمینه زمین</th>
+                <th class="my-cell">زمان آخرین به‌روزرسانی</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for station in stations %}
+                <tr>
+                    <td class="my-cell">{{ forloop.counter }}</td>
+                    <td class="my-cell">{{ station.title }}</td>
+                    <td class="my-cell">{{ station.formatted_max_temperature }}</td>
+                    <td class="my-cell">{{ station.formatted_min_temperature }}</td>
+                    <td class="my-cell">{{ station.formatted_soil_min_temperature }}</td>
+                    <td class="my-cell">{{ station.time_update_temp }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="form-container">
+            <a class="btn-save" href="{% url 'stations_temperature_table' %}?download=true">دانلود اکسل</a>
+        </div>
+    </div>
+{% endblock %}
