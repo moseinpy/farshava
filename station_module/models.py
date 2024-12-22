@@ -53,9 +53,9 @@ class Station(models.Model):
     recent_rainfall = models.FloatField(validators=[MinValueValidator(0)] ,verbose_name='بارندگی اخیر', null=True, blank=True)
     last_rainfall_date_time = models.DateTimeField(verbose_name='تاریخ ثبت بارندگی اخیر', null=True, blank=True)
     year_rainfall = models.FloatField(validators=[MinValueValidator(0)] ,verbose_name='بارندگی سال', null=True, blank=True)
-    max_temperature = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, verbose_name="دمای بیشینه")
-    min_temperature = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, verbose_name="دمای کمینه")
-    soil_min_temperature = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, verbose_name="دمای کمینه خاک")
+    max_temperature = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True, verbose_name="دمای بیشینه")
+    min_temperature = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True, verbose_name="دمای کمینه")
+    soil_min_temperature = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True, verbose_name="دمای کمینه خاک")
     time_update_temp = models.DateTimeField(verbose_name='تاریخ بروزرسانی دما', null=True, blank=True, default=None)
     short_description = models.CharField(max_length=360, db_index=True, null=True, blank=True, verbose_name='توضیحات کوتاه')
     description = models.TextField(verbose_name='توضیحات اصلی', db_index=True, null=True, blank=True)
@@ -120,17 +120,17 @@ class Station(models.Model):
 
     def formatted_max_temperature(self):
         if self.max_temperature is not None:
-            return f"{self.max_temperature:,.2f}"
+            return f"{self.max_temperature:,.1f}"
         return '-'
 
     def formatted_min_temperature(self):
         if self.min_temperature is not None:
-            return f"{self.min_temperature:,.2f}"
+            return f"{self.min_temperature:,.1f}"
         return '-'
 
     def formatted_soil_min_temperature(self):
         if self.soil_min_temperature is not None:
-            return f"{self.soil_min_temperature:,.2f}"
+            return f"{self.soil_min_temperature:,.1f}"
         return '-'
 
 

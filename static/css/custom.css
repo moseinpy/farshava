@@ -737,3 +737,17 @@ table td {
         font-size: 11px;
     }
 }
+
+th.sortable {
+    cursor: pointer;
+}
+th.sortable::after {
+    content: " 🔽";
+    font-size: 0.8em;
+}
+th.sortable.sorted-asc::after {
+    content: " 🔼";
+}
+th.sortable.sorted-desc::after {
+    content: " 🔽";
+}

@@ -182,3 +182,57 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+
+document.addEventListener('DOMContentLoaded', function () {
+    const table = document.querySelector('#temperatureTable');
+    const headers = table.querySelectorAll('th.sortable');
+    const tbody = table.querySelector('tbody');
+
+    headers.forEach((header, index) => {
+        header.addEventListener('click', () => {
+            const direction = header.classList.contains('sorted-asc') ? 'desc' : 'asc';
+            Array.from(headers).forEach(h => h.classList.remove('sorted-asc', 'sorted-desc'));
+            header.classList.add(direction === 'asc' ? 'sorted-asc' : 'sorted-desc');
+
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            rows.sort((rowA, rowB) => {
+                const cellA = rowA.children[index].textContent.trim();
+                const cellB = rowB.children[index].textContent.trim();
+
+                if (!isNaN(cellA) && !isNaN(cellB)) {
+                    return direction === 'asc' ? cellA - cellB : cellB - cellA;
+                }
+
+                return direction === 'asc'
+                    ? cellA.localeCompare(cellB, 'fa', {numeric: true})
+                    : cellB.localeCompare(cellA, 'fa', {numeric: true});
+            });
+
+            rows.forEach(row => tbody.appendChild(row));
+        });
+    });
+});
+
+$(document).ready(function () {
+    const table = $('#temperatureTable'); // انتخاب جدول
+
+    function resetRowNumbers() {
+        // ستون ردیف را دوباره مقداردهی می‌کند
+        table.find('tbody tr').each(function (index) {
+            $(this).find('td:first').text(index + 1); // اولین ستون (ردیف) را مقداردهی می‌کند
+        });
+    }
+
+    // اجرا کردن تابع بازنویسی اعداد هنگام کلیک روی سرستون‌ها
+    table.find('th').on('click', function () {
+        setTimeout(resetRowNumbers, 10); // اعداد ستون ردیف را پس از مرتب‌سازی به‌روزرسانی کن
+    });
+
+    // اعداد اولیه را تنظیم کن
+    resetRowNumbers();
+});
+
+
+
+
+
