@@ -979,7 +979,7 @@ def stations_temperature_table(request):
     ).order_by('min_temperature')
 
     # بررسی زمان آخرین آپدیت دما
-    ten_hours_ago = timezone.now() - datetime.timedelta(hours=10)
+    ten_hours_ago = timezone.now() - datetime.timedelta(hours=14)
     for station in stations:
         if station.time_update_temp and station.time_update_temp < ten_hours_ago:
             station.max_temperature = None

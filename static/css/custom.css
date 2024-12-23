@@ -47,23 +47,23 @@ table td {
 }
 
 .column-row-number {
-    width: 5%;  /* عرض ستون ردیف */
+    width: 5%; /* عرض ستون ردیف */
 }
 
 .column-city {
-    width: 20%;  /* عرض ستون شهرستان */
+    width: 20%; /* عرض ستون شهرستان */
 }
 
 .column-title {
-    width: 25%;  /* عرض ستون نام ایستگاه */
+    width: 25%; /* عرض ستون نام ایستگاه */
 }
 
 .column-recent-rainfall {
-    width: 15%;  /* عرض ستون بارندگی اخیر */
+    width: 15%; /* عرض ستون بارندگی اخیر */
 }
 
 .column-last-rainfall-date-time {
-    width: 20%;  /* عرض ستون تاریخ و ساعت ثبت بارش */
+    width: 20%; /* عرض ستون تاریخ و ساعت ثبت بارش */
 }
 
 .download-buttons {
@@ -428,7 +428,6 @@ table td {
 }
 
 
-
 .worklog-table th {
     background-color: #cfe2f3;
     color: #333;
@@ -462,7 +461,6 @@ table td {
 .worklog-table th.edit-column {
     width: 60px; /* عرض ستون ماه */
 }
-
 
 
 .worklog-table input,
@@ -726,12 +724,15 @@ table td {
     .table {
         font-size: 12px;
     }
+
     .table th, .table td {
         padding: 6px 8px;
     }
+
     .unique-city, .unique-title {
         width: auto; /* عرض خودکار در موبایل */
     }
+
     .unique-last-date-time {
         white-space: nowrap;
         font-size: 11px;
@@ -741,13 +742,38 @@ table td {
 th.sortable {
     cursor: pointer;
 }
+
 th.sortable::after {
     content: " 🔽";
     font-size: 0.8em;
 }
+
 th.sortable.sorted-asc::after {
     content: " 🔼";
 }
+
 th.sortable.sorted-desc::after {
     content: " 🔽";
 }
+
+td.temp-cell {
+    direction: ltr;
+    text-align: center;
+    font-family: Arial, sans-serif; /* فونت مناسب برای اعداد لاتین */
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100px; /* عرض ثابت یا قابل تغییر */
+}
+
+.input-temperature {
+    direction: ltr;
+    text-align: center;
+    font-family: Arial, sans-serif; /* فونت مناسب برای اعداد لاتین */
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100px; /* عرض ثابت یا قابل تغییر */
+    box-sizing: border-box;
+}
+

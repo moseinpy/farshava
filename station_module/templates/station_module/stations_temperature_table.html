@@ -15,7 +15,7 @@
                 <th class="my-cell">ردیف</th>
                 <th class="my-cell">نام ایستگاه</th>
                 <th class="my-cell sortable">دمای بیشینه</th>
-                <th class="my-cell sortable">دمای کمینه</th>
+                <th class="my-cell sortable ">دمای کمینه</th>
                 <th class="my-cell sortable">دمای کمینه زمین</th>
                 <th class="my-cell">زمان آخرین به‌روزرسانی</th>
             </tr>
@@ -25,9 +25,9 @@
                 <tr>
                     <td class="my-cell">{{ forloop.counter }}</td>
                     <td class="my-cell">{{ station.title }}</td>
-                    <td class="my-cell">{{ station.formatted_max_temperature }}</td>
-                    <td class="my-cell">{{ station.formatted_min_temperature }}</td>
-                    <td class="my-cell">{{ station.formatted_soil_min_temperature }}</td>
+                    <td class="my-cell temp-cell">{{ station.formatted_max_temperature }}</td>
+                    <td class="my-cell temp-cell">{{ station.formatted_min_temperature }}</td>
+                    <td class="my-cell temp-cell">{{ station.formatted_soil_min_temperature }}</td>
                     <td class="my-cell">{{ station.time_update_temp }}</td>
                 </tr>
             {% endfor %}
