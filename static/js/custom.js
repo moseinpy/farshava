@@ -182,57 +182,52 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-
 document.addEventListener('DOMContentLoaded', function () {
     const table = document.querySelector('#temperatureTable');
-    const headers = table.querySelectorAll('th.sortable');
+    const headers = table.querySelectorAll('th.sortable'); // فقط ستون‌های قابل سورت
     const tbody = table.querySelector('tbody');
 
-    headers.forEach((header, index) => {
+    headers.forEach((header, sortableIndex) => {
         header.addEventListener('click', () => {
+            // تعیین جهت مرتب‌سازی
             const direction = header.classList.contains('sorted-asc') ? 'desc' : 'asc';
-            Array.from(headers).forEach(h => h.classList.remove('sorted-asc', 'sorted-desc'));
+            headers.forEach(h => h.classList.remove('sorted-asc', 'sorted-desc'));
             header.classList.add(direction === 'asc' ? 'sorted-asc' : 'sorted-desc');
 
             const rows = Array.from(tbody.querySelectorAll('tr'));
-            rows.sort((rowA, rowB) => {
-                const cellA = rowA.children[index].textContent.trim();
-                const cellB = rowB.children[index].textContent.trim();
 
-                if (!isNaN(cellA) && !isNaN(cellB)) {
-                    return direction === 'asc' ? cellA - cellB : cellB - cellA;
+            // مرتب‌سازی ردیف‌ها
+            rows.sort((rowA, rowB) => {
+                // پیدا کردن سلول مرتبط با ستون قابل سورت
+                const cellA = rowA.children[sortableIndex + 2].textContent.trim(); // +2 به دلیل ستون‌های "ردیف" و "نام ایستگاه"
+                const cellB = rowB.children[sortableIndex + 2].textContent.trim();
+
+                // تبدیل به عدد در صورت امکان
+                const numA = parseFloat(cellA.replace(/,/g, '').replace(/٫/g, '.'));
+                const numB = parseFloat(cellB.replace(/,/g, '').replace(/٫/g, '.'));
+
+                if (!isNaN(numA) && !isNaN(numB)) {
+                    return direction === 'asc' ? numA - numB : numB - numA;
                 }
 
+                // مرتب‌سازی رشته‌ها
                 return direction === 'asc'
-                    ? cellA.localeCompare(cellB, 'fa', {numeric: true})
-                    : cellB.localeCompare(cellA, 'fa', {numeric: true});
+                    ? cellA.localeCompare(cellB, 'fa', { numeric: true })
+                    : cellB.localeCompare(cellA, 'fa', { numeric: true });
             });
 
             rows.forEach(row => tbody.appendChild(row));
+
+            // به‌روزرسانی شماره ردیف‌ها
+            resetRowNumbers();
         });
     });
-});
-
-$(document).ready(function () {
-    const table = $('#temperatureTable'); // انتخاب جدول
 
     function resetRowNumbers() {
-        // ستون ردیف را دوباره مقداردهی می‌کند
-        table.find('tbody tr').each(function (index) {
-            $(this).find('td:first').text(index + 1); // اولین ستون (ردیف) را مقداردهی می‌کند
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        rows.forEach((row, index) => {
+            row.children[0].textContent = index + 1; // ستون ردیف را به‌روزرسانی کن
         });
     }
-
-    // اجرا کردن تابع بازنویسی اعداد هنگام کلیک روی سرستون‌ها
-    table.find('th').on('click', function () {
-        setTimeout(resetRowNumbers, 10); // اعداد ستون ردیف را پس از مرتب‌سازی به‌روزرسانی کن
-    });
-
-    // اعداد اولیه را تنظیم کن
-    resetRowNumbers();
 });
-
-
-
-
 

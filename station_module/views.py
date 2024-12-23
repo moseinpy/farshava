@@ -674,8 +674,6 @@ def rainfall_24h(request):
     })
 
 
-
-
 @login_required
 def rainfall_24h_export_xls(request):
     today = timezone.now()
@@ -939,7 +937,14 @@ def table_update_temperature(request):
     if hasattr(current_user, 'employee'):
         workplace_code = current_user.employee.workplace_code
 
-    stations = Station.objects.filter(parent_station__code__exact=workplace_code, code__gte=19000, code__lte=99999)
+    stations = Station.objects.filter(
+        parent_station__code__exact=workplace_code,
+        code__gte=19000,
+        code__lte=99999
+    ).exclude(
+        code__gte=90000,
+        code__lte=90999
+    )
 
     if request.method == 'POST':
         for station in stations:
@@ -967,10 +972,11 @@ def table_update_temperature(request):
     return render(request, 'station_module/table_update_temperature.html', {'stations': stations})
 
 
-
 def stations_temperature_table(request):
     # فیلتر ایستگاه‌ها
-    stations = Station.objects.filter(Q(code__gte=19000, code__lte=99999)).order_by('title')
+    stations = Station.objects.filter(
+        Q(code__gte=40000, code__lte=99999) & ~Q(code__gte=90000, code__lte=90999)
+    ).order_by('min_temperature')
 
     # بررسی زمان آخرین آپدیت دما
     ten_hours_ago = timezone.now() - datetime.timedelta(hours=10)
@@ -992,8 +998,6 @@ def stations_temperature_table(request):
 
         ws.sheet_view.rightToLeft = True
 
-
-
         columns = ['ردیف', 'نام ایستگاه', 'دمای بیشینه', 'دمای کمینه', 'دمای کمینه زمین']
         header_font = Font(bold=True, size=12, color='000000')
         header_fill = PatternFill(start_color='D3D3D3', end_color='D3D3D3', fill_type='solid')
@@ -1007,15 +1011,20 @@ def stations_temperature_table(request):
             cell.border = border
 
         for row_num, station in enumerate(stations, 2):
-            ws.cell(row=row_num, column=1, value=row_num - 1).alignment = Alignment(horizontal='center', vertical='center')
+            ws.cell(row=row_num, column=1, value=row_num - 1).alignment = Alignment(horizontal='center',
+                                                                                    vertical='center')
             ws.cell(row=row_num, column=1).border = border
-            ws.cell(row=row_num, column=2, value=station.title).alignment = Alignment(horizontal='center', vertical='center')
+            ws.cell(row=row_num, column=2, value=station.title).alignment = Alignment(horizontal='center',
+                                                                                      vertical='center')
             ws.cell(row=row_num, column=2).border = border
-            ws.cell(row=row_num, column=3, value=station.max_temperature).alignment = Alignment(horizontal='center', vertical='center')
+            ws.cell(row=row_num, column=3, value=station.max_temperature).alignment = Alignment(horizontal='center',
+                                                                                                vertical='center')
             ws.cell(row=row_num, column=3).border = border
-            ws.cell(row=row_num, column=4, value=station.min_temperature).alignment = Alignment(horizontal='center', vertical='center')
+            ws.cell(row=row_num, column=4, value=station.min_temperature).alignment = Alignment(horizontal='center',
+                                                                                                vertical='center')
             ws.cell(row=row_num, column=4).border = border
-            ws.cell(row=row_num, column=5, value=station.soil_min_temperature).alignment = Alignment(horizontal='center', vertical='center')
+            ws.cell(row=row_num, column=5, value=station.soil_min_temperature).alignment = Alignment(
+                horizontal='center', vertical='center')
             ws.cell(row=row_num, column=5).border = border
             # ws.cell(row=row_num, column=6, value=station.time_update_temp).alignment = Alignment(horizontal='center', vertical='center')
             # ws.cell(row=row_num, column=6).border = border
