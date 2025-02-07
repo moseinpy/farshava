@@ -939,7 +939,7 @@ def table_update_temperature(request):
 
     stations = Station.objects.filter(
         parent_station__code__exact=workplace_code,
-        code__gte=19000,
+        code__gte=40000,
         code__lte=99999
     ).exclude(
         code__gte=90000,
