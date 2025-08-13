@@ -40,28 +40,32 @@ class StationListView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(StationListView, self).get_context_data()
-        context['banners'] = SiteBanner.objects.filter(is_active=True, position__iexact='station_list')
+        context['banners'] = SiteBanner.objects.filter(
+            is_active=True, 
+            position__iexact='station_list'
+        ).select_related()
         return context
 
     def get_queryset(self):
-        query = super(StationListView, self).get_queryset()
+        query = super(StationListView, self).get_queryset().select_related('category', 'type')
         query = query.exclude(category__url_title__iexact='rain-gauge')
         category_name = self.kwargs.get('cat')
         type_name = self.kwargs.get('type')
 
         if type_name is not None:
             query = query.filter(type__url_title__iexact=type_name)
-            print(query.query)
 
         if category_name is not None:
             query = query.filter(category__url_title__iexact=category_name)
-            print(query.query)
         return query
 
 
 class StationDetailView(DetailView):
     template_name = 'station_module/station_detail.html'
     model = Station
+    
+    def get_queryset(self):
+        return Station.objects.select_related('type').prefetch_related('station_galleries')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -69,18 +73,36 @@ class StationDetailView(DetailView):
         request = self.request
         favorite_station_id = request.session.get('station_favorites')
         context['is_favorite'] = favorite_station_id == str(loaded_station.id)
-        context['banners'] = SiteBanner.objects.filter(is_active=True, position__iexact='station_detail')
-        galleries = list(StationGallery.objects.filter(station_id=loaded_station.id).all())
+        context['banners'] = SiteBanner.objects.filter(
+            is_active=True, 
+            position__iexact='station_detail'
+        ).select_related()
+        
+        # Optimize gallery query
+        galleries = list(StationGallery.objects.filter(
+            station_id=loaded_station.id
+        ).select_related().all())
         galleries.insert(0, loaded_station)
         context['station_galleries_group'] = group_list(galleries, 3)
+        
+        # Optimize related stations query
         context['related_stations'] = group_list(
-            list(Station.objects.filter(type_id=loaded_station.type_id).exclude(pk=loaded_station.id).all()[:12]), 3)
+            list(Station.objects.filter(
+                type_id=loaded_station.type_id
+            ).exclude(
+                pk=loaded_station.id
+            ).select_related('type').all()[:12]), 3)
+            
         user_ip = get_client_ip(self.request)
         user_id = None
         if self.request.user.is_authenticated:
             user_id = self.request.user.id
 
-        has_been_visited = StationVisit.objects.filter(ip__iexact=user_ip, station_id=loaded_station.id).exists()
+        has_been_visited = StationVisit.objects.filter(
+            ip__iexact=user_ip, 
+            station_id=loaded_station.id
+        ).exists()
+        
         if not has_been_visited:
             new_visit = StationVisit(station=loaded_station, ip=user_ip, user_id=user_id)
             new_visit.save()
@@ -541,59 +563,60 @@ def table_update_24h_rainfall(request):
 
 def rainfall_24h(request):
     today = timezone.now()
-
-    # دریافت بازه زمانی مورد نظر (24، 48، 72، یا 96 ساعت)
     period = int(request.GET.get('period', 12))
-    rainfall_type = request.GET.get('rainfall_type', 'recent')  # نوع بارش (روزانه، اخیر، زراعی)
+    rainfall_type = request.GET.get('rainfall_type', 'recent')
 
-    # تبدیل تاریخ به جلالی (فرض می‌شود تابع date2jalali تعریف شده است)
-    date_jalali = date2jalali(today).strftime('%d-%m-%Y')
+    # Cache GeoJSON files
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    
+    # Get stations with a single optimized query
+    stations_query = Station.objects.select_related().only(
+        "id", "title", "latitude", "longitude", 
+        "rainfall_24h", "recent_rainfall", "year_rainfall",
+        "last_rainfall_date_time"
+    )
 
-    # محاسبه بازه‌های زمانی
+    # Apply filters based on rainfall type
+    if rainfall_type == 'daily':
+        stations = stations_query.order_by('-rainfall_24h')
+    elif rainfall_type == 'recent':
+        stations = stations_query.order_by('-recent_rainfall')
+    elif rainfall_type == 'crop':
+        stations = stations_query.order_by('-year_rainfall')
+    
+    # Update zero values for old data
     start_date_24h = today - datetime.timedelta(hours=20)
     start_date_recent = today - datetime.timedelta(days=4)
-
-    # دریافت داده‌ها و مقداردهی صفر به ایستگاه‌های بدون دیتا یا با داده‌های قدیمی
-    stations = Station.objects.all()
+    
+    # Bulk update stations with old data
+    stations_to_update_24h = []
+    stations_to_update_recent = []
+    
     for station in stations:
-        # صفر کردن بارش 24 ساعته اگر از 12 ساعت گذشته باشد
         if not station.last_rainfall_date_time or station.last_rainfall_date_time < start_date_24h:
             station.rainfall_24h = 0
-            station.save()
-
-        # صفر کردن بارش اخیر اگر از 4 روز گذشته باشد
+            stations_to_update_24h.append(station)
         if not station.last_rainfall_date_time or station.last_rainfall_date_time < start_date_recent:
             station.recent_rainfall = 0
-            station.save()
+            stations_to_update_recent.append(station)
+    
+    # Bulk update in batches
+    if stations_to_update_24h:
+        Station.objects.bulk_update(stations_to_update_24h, ['rainfall_24h'], batch_size=100)
+    if stations_to_update_recent:
+        Station.objects.bulk_update(stations_to_update_recent, ['recent_rainfall'], batch_size=100)
 
-    # فیلتر براساس نوع بارش
-    if rainfall_type == 'daily':
-        stations = stations.order_by('-rainfall_24h')
-    elif rainfall_type == 'recent':
-        stations = stations.order_by('-recent_rainfall')
-    elif rainfall_type == 'crop':
-        stations = stations.order_by('-year_rainfall')
-
-    # تنظیم صفحه‌بندی
-    paginator = Paginator(stations, 20)
-    page_number = request.GET.get('page', 1)
-    page = paginator.get_page(page_number)
-
-    # محاسبه شماره ردیف برای صفحه جاری
-    start_row_number = (page.number - 1) * paginator.per_page
-
-    # ایجاد جدول
-    table = Rainfall24hTable(stations, start_row_number=start_row_number)
-    RequestConfig(request, paginate={"per_page": 20}).configure(table)
-
-    # ساخت نقشه
+    # Create map
     m = folium.Map(location=[29.1044, 53.0454], zoom_start=7)
 
-    # بارگذاری فایل GeoJSON برای مرز شهرها
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # Load GeoJSON data (consider caching these files)
     with open(os.path.join(BASE_DIR, 'geojson_files', 'FarsCity.json'), 'r') as f:
         geojson_data_cities = json.load(f)
 
+    with open(os.path.join(BASE_DIR, 'geojson_files', 'Fars.json'), 'r') as f:
+        geojson_data_province = json.load(f)
+
+    # Add GeoJSON layers
     folium.GeoJson(
         geojson_data_cities,
         style_function=lambda feature: {
@@ -603,10 +626,6 @@ def rainfall_24h(request):
             'fillOpacity': 0.7,
         }
     ).add_to(m)
-
-    # بارگذاری فایل GeoJSON برای مرز استان
-    with open(os.path.join(BASE_DIR, 'geojson_files', 'Fars.json'), 'r') as f:
-        geojson_data_province = json.load(f)
 
     folium.GeoJson(
         geojson_data_province,
@@ -618,49 +637,37 @@ def rainfall_24h(request):
         }
     ).add_to(m)
 
-    # ایجاد داده‌های HeatMap
-    if rainfall_type == 'daily':
-        heat_data = [
-            [station.latitude, station.longitude, station.rainfall_24h]
-            for station in stations if station.rainfall_24h is not None and station.rainfall_24h > 0
-        ]
-    elif rainfall_type == 'recent':
-        heat_data = [
-            [station.latitude, station.longitude, station.recent_rainfall]
-            for station in stations if station.recent_rainfall is not None and station.recent_rainfall > 0
-        ]
-    elif rainfall_type == 'crop':
-        heat_data = [
-            [station.latitude, station.longitude, station.year_rainfall]
-            for station in stations if station.year_rainfall is not None and station.year_rainfall > 0
-        ]
-
-    HeatMap(heat_data).add_to(m)
-
-    # اضافه کردن MarkerCluster
+    # Create heat data and markers in a single loop
+    heat_data = []
     marker_cluster = MarkerCluster().add_to(m)
 
     for station in stations:
-        rainfall_value = 0
-        if rainfall_type == 'daily':
-            rainfall_value = station.rainfall_24h
-        elif rainfall_type == 'recent':
-            rainfall_value = station.recent_rainfall
-        elif rainfall_type == 'crop':
-            rainfall_value = station.year_rainfall
-
-        # فقط اگر مقدار بارش معتبر باشد، مارکر اضافه می‌شود
-        if rainfall_value is not None and rainfall_value > 0:
+        rainfall_value = getattr(station, {
+            'daily': 'rainfall_24h',
+            'recent': 'recent_rainfall',
+            'crop': 'year_rainfall'
+        }.get(rainfall_type, 'recent_rainfall'))
+        
+        if rainfall_value and rainfall_value > 0:
+            heat_data.append([station.latitude, station.longitude, rainfall_value])
             folium.Marker(
                 location=[station.latitude, station.longitude],
                 popup=f"{station.title} - بارندگی: {rainfall_value} میلیمتر",
-                icon=folium.Icon(color="blue", icon='cloud')
+                icon=folium.Icon(color=get_color(rainfall_value), icon='cloud')
             ).add_to(marker_cluster)
 
-    # تبدیل نقشه به HTML
+    HeatMap(heat_data).add_to(m)
+
+    # Convert map to HTML
     map_html = m._repr_html_()
 
-    # کاربران مجاز
+    # Create and configure table
+    table = Rainfall24hTable(stations)
+    RequestConfig(request).configure(table)
+
+    # Get date in Jalali format
+    date_jalali = date2jalali(today).strftime('%d-%m-%Y')
+
     allowed_users = ['2559110393', '2450451331']
 
     return render(request, 'station_module/rainfall_24h.html', {

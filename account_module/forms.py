@@ -243,13 +243,40 @@ class WorkLogForm(forms.ModelForm):
 
 
 
+# class YearMonthForm(forms.Form):
+#     year = forms.ChoiceField(label='سال', required=False)
+#     month = forms.ChoiceField(label='ماه', required=False)
+#
+#     def __init__(self, *args, **kwargs):
+#         super(YearMonthForm, self).__init__(*args, **kwargs)
+#         years = WorkLog.objects.values_list('year', flat=True).distinct().order_by('-year')
+#         months = WorkLog.objects.values_list('month', flat=True).distinct().order_by('month')
+#         self.fields['year'].choices = [(year, year) for year in years]
+#         self.fields['month'].choices = [(month, month) for month in months]
+
+
 class YearMonthForm(forms.Form):
     year = forms.ChoiceField(label='سال', required=False)
     month = forms.ChoiceField(label='ماه', required=False)
 
     def __init__(self, *args, **kwargs):
-        super(YearMonthForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
+
+        # سال‌ها را به ترتیب نزولی می‌آوریم
         years = WorkLog.objects.values_list('year', flat=True).distinct().order_by('-year')
-        months = WorkLog.objects.values_list('month', flat=True).distinct().order_by('month')
         self.fields['year'].choices = [(year, year) for year in years]
-        self.fields['month'].choices = [(month, month) for month in months]
+
+        # ترتیب صحیح ماه‌های شمسی
+        month_order = [
+            'فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور',
+            'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'
+        ]
+
+        # ماه‌هایی که در دیتابیس وجود دارند
+        db_months = list(WorkLog.objects.values_list('month', flat=True).distinct())
+
+        # مرتب‌سازی ماه‌ها بر اساس ترتیب تقویمی
+        sorted_months = [m for m in month_order if m in db_months]
+
+        # تنظیم گزینه‌ها در فیلد ماه
+        self.fields['month'].choices = [(m, m) for m in sorted_months]

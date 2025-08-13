@@ -73,6 +73,7 @@ class SiteBanner(models.Model):
         about_us = 'about_us', 'درباره ما'
         article_list = 'article_list', 'مقالات'
         article_detail = 'article_detail', 'جزئیات مقاله'
+        contact_us = 'rainfall-24h', 'بارش 24 ساعته و اخیر'
 
     title = models.CharField(max_length=200, verbose_name='عنوان')
     url = models.URLField(max_length=400, null=True, blank=True, verbose_name='آدرس بنر')

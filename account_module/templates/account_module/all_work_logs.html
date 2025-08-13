@@ -28,10 +28,11 @@
                         <th>شیفت روز</th>
                         <th>شیفت شب</th>
                         <th>مرخصی</th>
-                        <th>تعداد عدم مخابره</th>
-                        <th>تعداد تاخیر و تعجیل</th>
-                        <th>تعداد اشتباه</th>
+                        <th>عدم مخابره</th>
+                        <th>تاخیر و تعجیل</th>
+                        <th>اشتباه</th>
                         <th>همکاری در امور</th>
+                        <th>تاریخ ثبت</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -47,6 +48,7 @@
                             <td>{{ worklog.late_early_reports }}</td>
                             <td>{{ worklog.incorrect_reports }}</td>
                             <td>{{ worklog.station_collaboration }}</td>
+                            <td>{{ worklog.created_at|date:"Y-m-d" }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
