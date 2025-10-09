@@ -47,7 +47,8 @@ class StationListView(ListView):
         return context
 
     def get_queryset(self):
-        query = super(StationListView, self).get_queryset().select_related('category', 'type')
+        # query = super(StationListView, self).get_queryset().select_related('category', 'type')
+        query = super(StationListView, self).get_queryset().select_related('type').prefetch_related('category')
         query = query.exclude(category__url_title__iexact='rain-gauge')
         category_name = self.kwargs.get('cat')
         type_name = self.kwargs.get('type')
